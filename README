@@ -1,0 +1,17 @@
+Image Processing Using GPU
+
+Made as a Summer Term Project at Physics Department
+Imperial College London (2012) 
+
+by Vojtech Havlicek & Daniel Greening
+
+The main purpose of the project is to test capabilities of using GPU 
+for processing images.
+
+Initial Version:
+First version including GLUT bridge for OpenGL. A simple color shader is included, 
+but not yet working. Test commit for Git.
+
+Hello*****:
+2nd version, test commit from another computer.
+
