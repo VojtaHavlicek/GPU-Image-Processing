@@ -61,19 +61,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ImageProcessing.cpp" />
-    <ClCompile Include="textfile.cpp" />
+    <ClCompile Include="src\shaders\ShaderProgram.cpp" />
+    <ClCompile Include="src\ImageProcessing.cpp" />
+    <ClCompile Include="src\textfile\textfile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="images\artwork.png" />
     <None Include="README" />
-    <None Include="shaders\gaussianBlurTest\testGaussianBlurHor.vert" />
-    <None Include="shaders\monoColorTest\testFragmentShader.frag" />
-    <None Include="shaders\gaussianBlurTest\testGaussianBlurHor.frag" />
-    <None Include="shaders\monoColorTest\testVertexShader.vert" />
+    <None Include="src\shaders\gaussianBlurTest\testGaussianBlurHor.vert" />
+    <None Include="src\shaders\monoColorTest\testFragmentShader.frag" />
+    <None Include="src\shaders\gaussianBlurTest\testGaussianBlurHor.frag" />
+    <None Include="src\shaders\monoColorTest\testVertexShader.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="textfile.h" />
+    <ClInclude Include="src\shaders\ShaderProgram.h" />
+    <ClInclude Include="src\ImageProcessing.h" />
+    <ClInclude Include="src\textfile\textfile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

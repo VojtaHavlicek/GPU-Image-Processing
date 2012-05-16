@@ -1,16 +1,22 @@
-﻿Build started 16/05/2012 16:33:31.
+﻿Build started 16/05/2012 18:47:13.
      1>Project "D:\development\c\projects\OpenGL\ImageProcessing\ImageProcessing\ImageProcessing.vcxproj" on node 2 (rebuild target(s)).
      1>_PrepareForClean:
          Deleting file "Debug\ImageProcessing.lastbuildstate".
        InitializeBuildStatus:
          Creating "Debug\ImageProcessing.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ImageProcessing.cpp textfile.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt src\shaders\ShaderProgram.cpp src\ImageProcessing.cpp src\textfile\textfile.cpp
          textfile.cpp
          ImageProcessing.cpp
+         ShaderProgram.cpp
+     1>d:\development\c\projects\opengl\imageprocessing\imageprocessing\src\shaders\shaderprogram.cpp(31): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\string.h(105) : see declaration of 'strcpy'
+     1>d:\development\c\projects\opengl\imageprocessing\imageprocessing\src\shaders\shaderprogram.cpp(40): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\string.h(105) : see declaration of 'strcpy'
          Generating Code...
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\development\c\projects\OpenGL\ImageProcessing\Debug\ImageProcessing.exe" /NOLOGO glew32.lib opengl32.lib glu32.lib glut32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\ImageProcessing.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\development\c\projects\OpenGL\ImageProcessing\Debug\ImageProcessing.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\development\c\projects\OpenGL\ImageProcessing\Debug\ImageProcessing.lib" /MACHINE:X86 Debug\ImageProcessing.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\development\c\projects\OpenGL\ImageProcessing\Debug\ImageProcessing.exe" /NOLOGO glew32.lib opengl32.lib glu32.lib glut32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\ImageProcessing.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\development\c\projects\OpenGL\ImageProcessing\Debug\ImageProcessing.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\development\c\projects\OpenGL\ImageProcessing\Debug\ImageProcessing.lib" /MACHINE:X86 Debug\ShaderProgram.obj
+         Debug\ImageProcessing.obj
          Debug\textfile.obj
          ImageProcessing.vcxproj -> D:\development\c\projects\OpenGL\ImageProcessing\Debug\ImageProcessing.exe
        Manifest:
@@ -22,4 +28,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.47
+Time Elapsed 00:00:03.33

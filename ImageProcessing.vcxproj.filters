@@ -15,10 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ImageProcessing.cpp">
+    <ClCompile Include="src\ImageProcessing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="textfile.cpp">
+    <ClCompile Include="src\textfile\textfile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shaders\ShaderProgram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -27,13 +30,19 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="README" />
-    <None Include="shaders\monoColorTest\testFragmentShader.frag" />
-    <None Include="shaders\monoColorTest\testVertexShader.vert" />
-    <None Include="shaders\gaussianBlurTest\testGaussianBlurHor.frag" />
-    <None Include="shaders\gaussianBlurTest\testGaussianBlurHor.vert" />
+    <None Include="src\shaders\gaussianBlurTest\testGaussianBlurHor.frag" />
+    <None Include="src\shaders\gaussianBlurTest\testGaussianBlurHor.vert" />
+    <None Include="src\shaders\monoColorTest\testFragmentShader.frag" />
+    <None Include="src\shaders\monoColorTest\testVertexShader.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="textfile.h">
+    <ClInclude Include="src\ImageProcessing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\textfile\textfile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\shaders\ShaderProgram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
