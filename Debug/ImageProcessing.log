@@ -1,4 +1,4 @@
-﻿Build started 14/05/2012 20:31:22.
+﻿Build started 16/05/2012 16:17:43.
      1>Project "D:\development\c\projects\OpenGL\ImageProcessing\ImageProcessing\ImageProcessing.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\ImageProcessing.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -19,4 +19,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.38
+Time Elapsed 00:00:01.81

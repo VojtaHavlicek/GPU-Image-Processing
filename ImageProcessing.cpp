@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// change change change
+// 
 // Imperial College London
 //
 // Project: Image Processing Using GPU 
@@ -38,7 +38,9 @@ Functions
 void openGLDrawScene();
 void prepareShaders();
 void changeSize(int, int);
+void checkTrace();
 int openGLInit(GLvoid);
+
 
 //
 // Funkce vstupu klavesnice
@@ -97,7 +99,7 @@ int main(int argc, char **argv)
 	glClearColor(0.0,0.0,0.0,1.0);
 	glEnable(GL_CULL_FACE);
 
-	openGLInit();
+	//OpenGLInit();
 	glewInit();
 
 	if(GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader)
@@ -144,12 +146,41 @@ int openGLInit(GLvoid)
 Entry point for shader program production
 */
 //--- handlers to shaders
-GLuint testVertexShader;
-GLuint testFragmentShader;
-GLuint testProgram;
+GLuint vertexShader;
+GLuint fragmentShader;
+GLuint program;
 
 void prepareShaders()
 {
+	char *vertexShaderSource = NULL, *fragmentShaderSource = NULL; // Ref. to the first char of source?
+	
+	vertexShader   = glCreateShader(GL_VERTEX_SHADER); //Creates the both shaders
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+	vertexShaderSource   = textFileRead("shaders/testVertexShader.vert");
+	fragmentShaderSource = textFileRead("shaders/testFragmentShader.frag");
+
+	const char *vv = vertexShaderSource;
+	const char *ff = fragmentShaderSource;
+
+	glShaderSource(vertexShader,   1, &vv, NULL);
+	glShaderSource(fragmentShader, 1, &ff, NULL);
+
+	free(vertexShaderSource);
+	free(fragmentShaderSource);
+
+	glCompileShader(vertexShader);
+	glCompileShader(fragmentShader);
+
+	program = glCreateProgram();
+	glAttachShader(program, vertexShader);
+	glAttachShader(program, fragmentShader);
+
+	glLinkProgram(program);
+
+	glUseProgram(program);
+
+	/*
 	cout << "---\nPREPARING SHADERS: \n";
 	cout << "\nPROGRAM\n";
 	cout << "Preparing the shader program: ";
@@ -159,10 +190,10 @@ void prepareShaders()
 	char * testVertexShaderSource;
 	char * testFragmentShaderSource;
 
-	/**
+	
 	VertexShader definition HERE
 	----------------------------
-	*/
+	
 	cout << "\nVERTEX SHADER\n";
 	testVertexShader       = glCreateShader(GL_VERTEX_SHADER);                // Creates Shader
 	cout << "Reading the shader source: ";
@@ -180,10 +211,10 @@ void prepareShaders()
 	glAttachShader(testProgram, testVertexShader);                             // Attaches Shader to the program
 	cout << "Success \n";
 
-	/**
+	
 	FragmentShader definition HERE
 	------------------------------
-	*/
+	
 	cout << "\nFRAGMENT SHADER\n";
 	testFragmentShader       = glCreateShader(GL_FRAGMENT_SHADER);
 	cout << "Reading the shader source: ";
@@ -202,16 +233,16 @@ void prepareShaders()
 	glAttachShader(testProgram, testFragmentShader);
 	cout << "Success \n";
 	
-	/**
+	
 	Link here
-	*/
+	
 	glLinkProgram(testProgram);
 
-	/**
+	
 	Use here ??? glUseProgram(testProgram);
-	*/
+	
 	glUseProgram(testProgram);
-
+	*/
 }
 
 //-----------------------------------------------------------------------------------------

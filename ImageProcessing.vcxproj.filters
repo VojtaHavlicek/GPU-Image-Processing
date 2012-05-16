@@ -26,6 +26,7 @@
     <None Include="images\artwork.png">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="README" />
     <None Include="shaders\testFragmentShader.frag" />
     <None Include="shaders\testVertexShader.vert" />
   </ItemGroup>

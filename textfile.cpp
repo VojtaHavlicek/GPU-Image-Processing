@@ -9,8 +9,9 @@
 // or explicit are given
 //////////////////////////////////////////////////////////////////////
 
-
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
+//#include <iostream>
 #include <stdlib.h>
 #include <string.h>
 
@@ -22,7 +23,6 @@ char *textFileRead(char *fn) {
 	char *content = NULL;
 
 	int count=0;
-
 	if (fn != NULL) {
 		fp = fopen(fn,"rt");
 
