@@ -67,8 +67,10 @@
   <ItemGroup>
     <None Include="images\artwork.png" />
     <None Include="README" />
-    <None Include="shaders\testFragmentShader.frag" />
-    <None Include="shaders\testVertexShader.vert" />
+    <None Include="shaders\gaussianBlurTest\testGaussianBlurHor.vert" />
+    <None Include="shaders\monoColorTest\testFragmentShader.frag" />
+    <None Include="shaders\gaussianBlurTest\testGaussianBlurHor.frag" />
+    <None Include="shaders\monoColorTest\testVertexShader.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="textfile.h" />

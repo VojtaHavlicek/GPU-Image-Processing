@@ -38,7 +38,6 @@ Functions
 void openGLDrawScene();
 void prepareShaders();
 void changeSize(int, int);
-void checkTrace();
 int openGLInit(GLvoid);
 
 
@@ -93,6 +92,7 @@ int main(int argc, char **argv)
 	
 	glutDisplayFunc(openGLDrawScene);         // registrace funkce volane pri prekreslovani okna
 	glutIdleFunc(openGLDrawScene);
+	glutKeyboardFunc(onKeyboard);
 	glutReshapeFunc(changeSize);
 	
 	glEnable(GL_DEPTH_TEST);
@@ -157,8 +157,8 @@ void prepareShaders()
 	vertexShader   = glCreateShader(GL_VERTEX_SHADER); //Creates the both shaders
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-	vertexShaderSource   = textFileRead("shaders/testVertexShader.vert");
-	fragmentShaderSource = textFileRead("shaders/testFragmentShader.frag");
+	vertexShaderSource   = textFileRead("shaders/monoColorTest/testVertexShader.vert");
+	fragmentShaderSource = textFileRead("shaders/monoColorTest/testFragmentShader.frag");
 
 	const char *vv = vertexShaderSource;
 	const char *ff = fragmentShaderSource;
@@ -176,73 +176,9 @@ void prepareShaders()
 	glAttachShader(program, vertexShader);
 	glAttachShader(program, fragmentShader);
 
-	glLinkProgram(program);
+	glLinkProgram(program); //Links the shader program to OpenGL
 
-	glUseProgram(program);
-
-	/*
-	cout << "---\nPREPARING SHADERS: \n";
-	cout << "\nPROGRAM\n";
-	cout << "Preparing the shader program: ";
-	testProgram = glCreateProgram();
-	cout << "Success\n";
-	
-	char * testVertexShaderSource;
-	char * testFragmentShaderSource;
-
-	
-	VertexShader definition HERE
-	----------------------------
-	
-	cout << "\nVERTEX SHADER\n";
-	testVertexShader       = glCreateShader(GL_VERTEX_SHADER);                // Creates Shader
-	cout << "Reading the shader source: ";
-	testVertexShaderSource = textFileRead("shaders/testVertexShader.vert");   // Loads Source. Uses textfile header file;
-	cout << "Success\n";
-	const char * testVertexShaderSourcePointer = testVertexShaderSource;      // Grabs a reference to source loaded
-	
-	glShaderSource(testVertexShader, 1, &testVertexShaderSourcePointer, NULL); // Why reference and why NULL for lengths ?
-	free(testVertexShaderSource);  // Frees the memory used by the sourcefile for shader
-	cout << "Compiling the shader: ";
-	glCompileShader(testVertexShader); // Compiles
-	cout << "Success \n";
-
-	cout << "Attaching to the program: ";
-	glAttachShader(testProgram, testVertexShader);                             // Attaches Shader to the program
-	cout << "Success \n";
-
-	
-	FragmentShader definition HERE
-	------------------------------
-	
-	cout << "\nFRAGMENT SHADER\n";
-	testFragmentShader       = glCreateShader(GL_FRAGMENT_SHADER);
-	cout << "Reading the shader source: ";
-	testFragmentShaderSource = textFileRead("shaders/testFragmentShader.frag");
-	cout << "Success\n";
-
-	const char * testFragmentShaderSourcePointer = testFragmentShaderSource; 
-	
-	glShaderSource(testFragmentShader, 1, &testFragmentShaderSourcePointer, NULL); //Why reference and why NULL?
-	free(testFragmentShaderSource);
-	cout << "Compiling the shader: ";
-	glCompileShader(testFragmentShader);
-	cout << "Success \n";
-
-	cout << "Attaching to the program: ";
-	glAttachShader(testProgram, testFragmentShader);
-	cout << "Success \n";
-	
-	
-	Link here
-	
-	glLinkProgram(testProgram);
-
-	
-	Use here ??? glUseProgram(testProgram);
-	
-	glUseProgram(testProgram);
-	*/
+	glUseProgram(program); //Uses the OpenGL Program
 }
 
 //-----------------------------------------------------------------------------------------
@@ -252,25 +188,7 @@ void prepareShaders()
 float lpos[4] = {1,0.5,1,0};
 float a = 0.0;
 void openGLDrawScene() 
-{
-	/**
-	Entry Point For Rendering And GL Here
-	*/	
-
-	
-	/*
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // ???
-
-	glBegin(GL_TRIANGLES);
-		glColor3f(1.0f,1.0f,0.0f);
-		glVertex2f(-0.5,-0.5);
-		//glColor3f(0.0f,1.0f,0.0f);
-		glVertex2f(0.5,0.0);
-		glColor3f(0.0f,1.0f,1.0f);
-		glVertex2f(0.0,0.5);
-	glEnd();
-	*/
-	
+{	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	glLoadIdentity();
@@ -278,7 +196,6 @@ void openGLDrawScene()
 		      0.0,0.0,-1.0,
 			  0.0f,1.0f,0.0f);
 
-	//glLightfv(GL_LIGHT0, GL_POSITION, lpos);
 	glRotatef(a,0,1,1);
 	glutSolidTeapot(1.0);
 	a+=0.1;
