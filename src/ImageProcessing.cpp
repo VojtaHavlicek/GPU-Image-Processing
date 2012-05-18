@@ -148,34 +148,9 @@ void prepareShaders()
 	shaderProgram = ShaderProgram();
 	shaderProgram.addFragmentShaderSource("src/shaders/monoColorTest/testFragmentShader.frag");
 	shaderProgram.addVertexShaderSource("src/shaders/monoColorTest/testVertexShader.vert");
-
-	char *vertexShaderSource = NULL, *fragmentShaderSource = NULL; // Ref. to the first char of source?
 	
-	vertexShader   = glCreateShader(GL_VERTEX_SHADER); //Creates the both shaders
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-	vertexShaderSource   = shaderProgram.vertexShaderSources[0];//textFileRead("src/shaders/monoColorTest/testVertexShader.vert");
-	fragmentShaderSource = shaderProgram.fragmentShaderSources[0];//textFileRead("src/shaders/monoColorTest/testFragmentShader.frag");
-
-	const char *vv = vertexShaderSource;
-	const char *ff = fragmentShaderSource;
-
-	glShaderSource(vertexShader,   1, &vv, NULL);
-	glShaderSource(fragmentShader, 1, &ff, NULL);
-
-	free(vertexShaderSource);
-	free(fragmentShaderSource);
-
-	glCompileShader(vertexShader);
-	glCompileShader(fragmentShader);
-
-	program = glCreateProgram();
-	glAttachShader(program, vertexShader);
-	glAttachShader(program, fragmentShader);
-
-	glLinkProgram(program); //Links the shader program to OpenGL
-
-	glUseProgram(program); //Uses the OpenGL Program
+	shaderProgram.prepareProgram();
+	shaderProgram.run();
 }
 
 //-----------------------------------------------------------------------------------------

@@ -6,7 +6,8 @@
 // Vojta Havlicek 2012
 /////////////////////////////////////////////////////////////////////////
 
-
+#include <GL/glew.h> // header file of GLEW;
+#include <GL/glut.h> // header file of GLUT functions
 #include <vector>
 #include <string>
 #include <iostream>
@@ -22,7 +23,16 @@ public:
 	void addFragmentShaderSource(std::string);  // adds a fragment shader source to the list.
 	void addVertexShaderSource(std::string);    // adds a vertex shader source to the list.
 
+	void prepareProgram(); //Prepares the shader program to be later used
+
 	std::vector<char*> fragmentShaderSources; //contains info about the fragmentShader files compiled into the program
 	std::vector<char*> vertexShaderSources;   //contains info about the   vertexShader files compiled into the program
+
+	int run(); // Runs the attached program. Returns 1 on succes, 0 on fail (if program was not prepared); 
+
+private :	
+	GLuint program;       // stores a handler to OpenGL program
+	bool programPrepared; // bool to determine if the program was prepared
+
 };
 
