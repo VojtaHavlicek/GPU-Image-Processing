@@ -119,15 +119,7 @@ Check if it does not collide with GLUT initialization.
 
 int openGLInit(GLvoid)
 {
-	glShadeModel(GL_SMOOTH); //Enables smooth shading
-
-	glClearDepth(1.0f);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
-
-	//Make perspective corrections
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-
+	
 	return 0;
 }
 
@@ -147,36 +139,44 @@ void prepareShaders()
 
 	shaderProgram = ShaderProgram();
 	shaderProgram.addFragmentShaderSource("src/shaders/monoColorTest/testFragmentShader.frag");
-	shaderProgram.addVertexShaderSource("src/shaders/monoColorTest/testVertexShader.vert");
+	shaderProgram.addVertexShaderSource(  "src/shaders/monoColorTest/testVertexShader.vert");
 	
 	shaderProgram.prepareProgram();
-	shaderProgram.run();
+	//shaderProgram.run();
 }
 
 //-----------------------------------------------------------------------------------------
 //
 //	An entry point function for all OpenGL drawing. Called at onDisplay.
 //
-float lpos[4] = {1,0.5,1,0};
-float a = 0.0;
 void openGLDrawScene() 
 {	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	glLoadIdentity();
-	gluLookAt(0.0,0.0,5.0, 
-		      0.0,0.0,-1.0,
-			  0.0f,1.0f,0.0f);
-
-	glRotatef(a,0,1,1);
-	glutSolidTeapot(1.0);
-	a+=0.1;
 	
+	/**
+
+	*/
+	glTranslated(-0.5,-0.5,0.0);
+	glBegin(GL_QUADS);
+		glColor3d(1.0,1.0,1.0);
+		glVertex2d(0.0,0.0);
+
+		glColor3d(1.0,0.0,1.0);
+		glVertex2d(2.0,0.0);
+
+		glColor3d(1.0,1.0,0.0);
+		glVertex2d(2.0,2.0);
+		
+		glColor3d(0.0,1.0,1.0);
+		glVertex2d(0.0,2.0);
+	glEnd();
 	
 	glutSwapBuffers();
 }
 
 void changeSize(int w, int h) {
+
 
 	// Prevent a divide by zero, when window is too short
 	// (you cant make a window of zero width).
@@ -185,14 +185,13 @@ void changeSize(int w, int h) {
 
 	float ratio = 1.0* w / h;
 
+	// Set the viewport to be the entire window
+    glViewport(0, 0, w, h);
+
 	// Reset the coordinate system before modifying
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	
-	// Set the viewport to be the entire window
-    glViewport(0, 0, w, h);
-
-	// Set the correct perspective.
-	gluPerspective(45,ratio,1,1000);
-	glMatrixMode(GL_MODELVIEW);
+	
+	
 }

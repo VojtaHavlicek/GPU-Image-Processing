@@ -1,9 +1,9 @@
-﻿Build started 18/05/2012 20:33:34.
+﻿Build started 18/05/2012 21:15:25.
      1>Project "D:\development\c\projects\OpenGL\ImageProcessing\ImageProcessing\ImageProcessing.vcxproj" on node 2 (rebuild target(s)).
      1>_PrepareForClean:
          Deleting file "Debug\ImageProcessing.lastbuildstate".
        InitializeBuildStatus:
-         Touching "Debug\ImageProcessing.unsuccessfulbuild".
+         Creating "Debug\ImageProcessing.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt src\shaders\ShaderProgram.cpp src\ImageProcessing.cpp src\textfile\textfile.cpp
          textfile.cpp
@@ -24,4 +24,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.46
+Time Elapsed 00:00:02.98

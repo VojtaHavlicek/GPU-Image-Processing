@@ -68,9 +68,7 @@
   <ItemGroup>
     <None Include="images\artwork.png" />
     <None Include="README" />
-    <None Include="src\shaders\gaussianBlurTest\testGaussianBlurHor.vert" />
     <None Include="src\shaders\monoColorTest\testFragmentShader.frag" />
-    <None Include="src\shaders\gaussianBlurTest\testGaussianBlurHor.frag" />
     <None Include="src\shaders\monoColorTest\testVertexShader.vert" />
   </ItemGroup>
   <ItemGroup>

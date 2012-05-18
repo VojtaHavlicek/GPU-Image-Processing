@@ -30,8 +30,6 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="README" />
-    <None Include="src\shaders\gaussianBlurTest\testGaussianBlurHor.frag" />
-    <None Include="src\shaders\gaussianBlurTest\testGaussianBlurHor.vert" />
     <None Include="src\shaders\monoColorTest\testFragmentShader.frag" />
     <None Include="src\shaders\monoColorTest\testVertexShader.vert" />
   </ItemGroup>
