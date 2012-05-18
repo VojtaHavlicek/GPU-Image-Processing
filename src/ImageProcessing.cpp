@@ -56,7 +56,6 @@ void onKeyboard(unsigned char key, int x, int y)
     }
 }
 
-ShaderProgram shaderProgram;
 
 //---------------------------------------------------------------------
 // Hlavni funkce konzolove aplikace
@@ -138,6 +137,7 @@ Entry point for shader program production
 */
 //--- handlers to shaders
 
+ShaderProgram shaderProgram;
 
 void prepareShaders()
 {
