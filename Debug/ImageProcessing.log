@@ -1,4 +1,4 @@
-﻿Build started 16/05/2012 18:47:13.
+﻿Build started 17/05/2012 13:23:23.
      1>Project "D:\development\c\projects\OpenGL\ImageProcessing\ImageProcessing\ImageProcessing.vcxproj" on node 2 (rebuild target(s)).
      1>_PrepareForClean:
          Deleting file "Debug\ImageProcessing.lastbuildstate".
@@ -28,4 +28,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:03.33
+Time Elapsed 00:00:03.46
