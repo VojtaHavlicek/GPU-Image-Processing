@@ -18,6 +18,7 @@
 #include "textfile/textfile.h"     // includes textfile manipulation utilities
 #include "shaders/ShaderProgram.h" // includes the ShaderProgram Class
 #include "ImageProcessing.h"       // includes interface for the file (function definitions). Always include as last !!!
+#include "soil/SOIL.h" // Soil 
 
 //
 // Uses the standard namespace for io operations
@@ -71,7 +72,7 @@ int main(int argc, char **argv)
 	Prepares GLUT
 	*/
     glutInit(&argc, argv);              // inicializace knihovny GLUT
-	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+	glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(W,H);
 	glutInitWindowPosition(200,200);
 
@@ -81,13 +82,12 @@ int main(int argc, char **argv)
     win1 = glutCreateWindow("Image Processing Project");// vytvoreni okna pro kresleni
 	
 	glutDisplayFunc(openGLDrawScene);         // registrace funkce volane pri prekreslovani okna
-	glutIdleFunc(openGLDrawScene);
+	//glutIdleFunc(openGLDrawScene);
 	glutKeyboardFunc(onKeyboard);
 	glutReshapeFunc(changeSize);
 	
-	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.0,0.0,0.0,1.0);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 
 	//OpenGLInit();
 	glewInit();
@@ -136,7 +136,7 @@ void prepareShaders()
 	/**
 	Test for ShaderProgram Class
 	*/
-
+	
 	shaderProgram = ShaderProgram();
 	shaderProgram.addFragmentShaderSource("src/shaders/monoColorTest/testFragmentShader.frag");
 	shaderProgram.addVertexShaderSource(  "src/shaders/monoColorTest/testVertexShader.vert");
@@ -149,6 +149,7 @@ void prepareShaders()
 //
 //	An entry point function for all OpenGL drawing. Called at onDisplay.
 //
+unsigned int textureHandler;
 void openGLDrawScene() 
 {	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -157,7 +158,13 @@ void openGLDrawScene()
 	/**
 
 	*/
-	glTranslated(-0.5,-0.5,0.0);
+	textureHandler = SOIL_load_OGL_texture("artwork.png",
+							SOIL_LOAD_AUTO,
+							SOIL_CREATE_NEW_ID,
+							SOIL_FLAG_INVERT_Y);
+
+	cout << "textureHandler "<< textureHandler << "\n";
+	glTranslated(-1.0,-1.0,0.0);
 	glBegin(GL_QUADS);
 		glColor3d(1.0,1.0,1.0);
 		glVertex2d(0.0,0.0);

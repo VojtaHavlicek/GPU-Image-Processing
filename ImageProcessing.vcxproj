@@ -72,9 +72,13 @@
     <None Include="src\shaders\monoColorTest\testVertexShader.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\soil\SOIL.h" />
     <ClInclude Include="src\shaders\ShaderProgram.h" />
     <ClInclude Include="src\ImageProcessing.h" />
     <ClInclude Include="src\textfile\textfile.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="src\soil\SOIL.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
