@@ -30,8 +30,14 @@ public:
 
 	int run(); // Runs the attached program. Returns 1 on succes, 0 on fail (if program was not prepared); 
 
-private :	
 	GLuint program;       // stores a handler to OpenGL program
+
+	/*
+	^^^ it is important that program cannot be private as it is required for modifying uniform/attribute variables within the shader from outside the shader
+	*/
+
+
+
 	bool programPrepared; // bool to determine if the program was prepared
 
 };

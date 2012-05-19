@@ -15,6 +15,7 @@
 #include <GL/glut.h> // header file of GLUT functions
 #include <iostream>  // input/output stream for debug
 #include <string>
+#include <cmath>
 #include "textfile/textfile.h"     // includes textfile manipulation utilities
 #include "shaders/ShaderProgram.h" // includes the ShaderProgram Class
 #include "ImageProcessing.h"       // includes interface for the file (function definitions). Always include as last !!!
@@ -27,28 +28,25 @@ using namespace std;
 
 
 
-//
-// Funkce vstupu klavesnice
-//
 void onKeyboard(unsigned char key, int x, int y)
 {
-	key=(key>'A' && key<='Z') ? key+'a'-'A':key; // prevod na mala pismena
+	key=(key>'A' && key<='Z') ? key+'a'-'A':key; 
     switch (key) {
 		
 		//--- EXIT CASES
-        case 'x':                       // stlaceni techto klaves uzavre aplikaci
+        case 'x':                 
         case 'q':
-        case 27:                        // 27 je kod klavesy ESC
+        case 27:          
             exit(0);
         break;
         
 		//----------------------------------
-		case 'f':  // klavesa 'f' zpusobi
+		case 'f': 
 			if(!fullscreen){
 				fullscreen = true;
-				glutFullScreen();           // prepnuti na celou obrazovku
+				glutFullScreen();           
 			}else{
-				glutReshapeWindow(W, H);// zmenseni okna
+				glutReshapeWindow(W, H);
 				glutPositionWindow(200, 200);
 				fullscreen = false;
 			}
@@ -58,9 +56,7 @@ void onKeyboard(unsigned char key, int x, int y)
 }
 
 
-//---------------------------------------------------------------------
-// Hlavni funkce konzolove aplikace
-//---------------------------------------------------------------------
+
 int main(int argc, char **argv)
 {
 	
@@ -71,7 +67,7 @@ int main(int argc, char **argv)
 	/**
 	Prepares GLUT
 	*/
-    glutInit(&argc, argv);              // inicializace knihovny GLUT
+    glutInit(&argc, argv);
 	glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(W,H);
 	glutInitWindowPosition(200,200);
@@ -79,10 +75,11 @@ int main(int argc, char **argv)
 	/**
 	Create the new Window
 	*/
-    win1 = glutCreateWindow("Image Processing Project");// vytvoreni okna pro kresleni
+    win1 = glutCreateWindow("Image Processing Project");
+	cout << "OpenGL version: "<< glGetString(GL_VERSION) << "\n";  // Check for OpenGL version
 	
-	glutDisplayFunc(openGLDrawScene);         // registrace funkce volane pri prekreslovani okna
-	//glutIdleFunc(openGLDrawScene);
+	glutDisplayFunc(openGLDrawScene);      
+	glutIdleFunc(openGLDrawScene);
 	glutKeyboardFunc(onKeyboard);
 	glutReshapeFunc(changeSize);
 	
@@ -108,7 +105,7 @@ int main(int argc, char **argv)
 	*/
 	glutMainLoop(); //starts the main loop of the app.
 
-    return 0;                           // navratova hodnota vracena operacnimu systemu
+    return 0;             
 }
 
 
@@ -139,10 +136,10 @@ void prepareShaders()
 	
 	shaderProgram = ShaderProgram();
 	shaderProgram.addFragmentShaderSource("src/shaders/monoColorTest/testFragmentShader.frag");
-	shaderProgram.addVertexShaderSource(  "src/shaders/monoColorTest/testVertexShader.vert");
+	shaderProgram.addVertexShaderSource("src/shaders/monoColorTest/testVertexShader.vert");
 	
 	shaderProgram.prepareProgram();
-	//shaderProgram.run();
+	shaderProgram.run();
 }
 
 //-----------------------------------------------------------------------------------------
@@ -150,35 +147,58 @@ void prepareShaders()
 //	An entry point function for all OpenGL drawing. Called at onDisplay.
 //
 unsigned int textureHandler;
+GLint colorLoc; //Location of colorVec
+float red=0.5;
+bool colorForward=true;
+
 void openGLDrawScene() 
 {	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	
-	/**
+	colorLoc = glGetUniformLocation(shaderProgram.program, "colorVec"); //gets location of colorVec
+	glUniform4f(colorLoc, sin(red), 0.0f, 1.0f, 1.0f); //modifies colorVec
 
-	*/
+	if(colorForward==true){ 
+		red+=0.0001f;
+		if(red>0.99f){
+			colorForward = false;
+		}
+	}
+	else{
+		red-=0.0001f;
+		if(red<0.01f){
+			colorForward = true;
+		}
+	}
+
+
+	/*
 	textureHandler = SOIL_load_OGL_texture("artwork.png",
 							SOIL_LOAD_AUTO,
 							SOIL_CREATE_NEW_ID,
 							SOIL_FLAG_INVERT_Y);
 
 	cout << "textureHandler "<< textureHandler << "\n";
+	*/
+
 	glTranslated(-1.0,-1.0,0.0);
 	glBegin(GL_QUADS);
-		glColor3d(1.0,1.0,1.0);
+		//glColor3d(1.0,1.0,1.0);
 		glVertex2d(0.0,0.0);
 
-		glColor3d(1.0,0.0,1.0);
+		//glColor3d(1.0,0.0,1.0);
 		glVertex2d(2.0,0.0);
 
-		glColor3d(1.0,1.0,0.0);
+		//glColor3d(1.0,1.0,0.0);
 		glVertex2d(2.0,2.0);
 		
-		glColor3d(0.0,1.0,1.0);
+		//glColor3d(0.0,1.0,1.0);
 		glVertex2d(0.0,2.0);
 	glEnd();
-	
+
+
+
 	glutSwapBuffers();
 }
 
