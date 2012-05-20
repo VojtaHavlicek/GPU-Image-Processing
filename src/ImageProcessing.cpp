@@ -79,7 +79,7 @@ int main(int argc, char **argv)
 	cout << "OpenGL version: "<< glGetString(GL_VERSION) << "\n";  // Check for OpenGL version
 	
 	glutDisplayFunc(openGLDrawScene);      
-	glutIdleFunc(openGLDrawScene);
+	//glutIdleFunc(openGLDrawScene);
 	glutKeyboardFunc(onKeyboard);
 	glutReshapeFunc(changeSize);
 	
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
 	Pre-run application entry point
 	*/
 
-	prepareShaders();
+	//prepareShaders();  //shaders disabled while trying out textures
 
 	/**
 	Starts the main GLUT loop
@@ -146,7 +146,7 @@ void prepareShaders()
 //
 //	An entry point function for all OpenGL drawing. Called at onDisplay.
 //
-unsigned int textureHandler;
+GLuint textureHandler; //I think this needs to be GLuint instead of unsigned int
 GLint colorLoc; //Location of colorVec
 float red=0.5;
 bool colorForward=true;
@@ -156,9 +156,10 @@ void openGLDrawScene()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	
-	colorLoc = glGetUniformLocation(shaderProgram.program, "colorVec"); //gets location of colorVec
-	glUniform4f(colorLoc, sin(red), 0.0f, 1.0f, 1.0f); //modifies colorVec
+	//colorLoc = glGetUniformLocation(shaderProgram.program, "colorVec"); //gets location of colorVec
+	//glUniform4f(colorLoc, sin(red), 0.0f, 1.0f, 1.0f); //modifies colorVec
 
+	/*
 	if(colorForward==true){ 
 		red+=0.0001f;
 		if(red>0.99f){
@@ -171,29 +172,37 @@ void openGLDrawScene()
 			colorForward = true;
 		}
 	}
-
-
-	/*
-	textureHandler = SOIL_load_OGL_texture("artwork.png",
+	*/
+	glEnable(GL_TEXTURE_2D);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); //prevents image from bleeding over to other side
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); //same but for in other axis
+	
+	textureHandler = SOIL_load_OGL_texture("src/artwork.png",
 							SOIL_LOAD_AUTO,
 							SOIL_CREATE_NEW_ID,
 							SOIL_FLAG_INVERT_Y);
 
 	cout << "textureHandler "<< textureHandler << "\n";
-	*/
+	
+	glBindTexture(GL_TEXTURE_2D, textureHandler);   
+
 
 	glTranslated(-1.0,-1.0,0.0);
 	glBegin(GL_QUADS);
 		//glColor3d(1.0,1.0,1.0);
+		glTexCoord2f(0.0f, 0.0f);
 		glVertex2d(0.0,0.0);
 
 		//glColor3d(1.0,0.0,1.0);
+		glTexCoord2f(1.0f, 0.0f); // TexCoords are normalized, in range [0,1]
 		glVertex2d(2.0,0.0);
 
 		//glColor3d(1.0,1.0,0.0);
+		glTexCoord2f(1.0f, 1.0f);
 		glVertex2d(2.0,2.0);
 		
 		//glColor3d(0.0,1.0,1.0);
+		glTexCoord2f(0.0f, 1.0f);
 		glVertex2d(0.0,2.0);
 	glEnd();
 

@@ -1,16 +1,18 @@
-﻿Build started 19/05/2012 23:59:49.
+﻿Build started 20/05/2012 19:26:39.
      1>Project "C:\Users\Daniel Greening\Documents\Visual Studio 2010\Projects\Project2\Image-Processing-Using-GPU\ImageProcessing.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
-         Creating "Debug\ImageProcessing.unsuccessfulbuild" because "AlwaysCreate" was specified.
+         Touching "Debug\ImageProcessing.unsuccessfulbuild".
        ClCompile:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt src\ImageProcessing.cpp
-         ImageProcessing.cpp
+         All outputs are up-to-date.
        Link:
          c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Daniel Greening\Documents\Visual Studio 2010\Projects\Project2\Image-Processing-Using-GPU\Debug\ImageProcessing.exe" /NOLOGO glew32.lib opengl32.lib glu32.lib glut32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\ImageProcessing.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Daniel Greening\Documents\Visual Studio 2010\Projects\Project2\Image-Processing-Using-GPU\Debug\ImageProcessing.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Daniel Greening\Documents\Visual Studio 2010\Projects\Project2\Image-Processing-Using-GPU\Debug\ImageProcessing.lib" /MACHINE:X86 Debug\ShaderProgram.obj
          Debug\ImageProcessing.obj
          Debug\textfile.obj
          src\soil\SOIL.lib
-         LINK : C:\Users\Daniel Greening\Documents\Visual Studio 2010\Projects\Project2\Image-Processing-Using-GPU\Debug\ImageProcessing.exe not found or not built by the last incremental link; performing full link
+     1>SOIL.lib(image_DXT.obj) : warning LNK4204: 'C:\Users\Daniel Greening\Documents\Visual Studio 2010\Projects\Project2\Image-Processing-Using-GPU\Debug\vc100.pdb' is missing debugging information for referencing module; linking object as if no debug info
+     1>SOIL.lib(image_helper.obj) : warning LNK4204: 'C:\Users\Daniel Greening\Documents\Visual Studio 2010\Projects\Project2\Image-Processing-Using-GPU\Debug\vc100.pdb' is missing debugging information for referencing module; linking object as if no debug info
+     1>SOIL.lib(SOIL.obj) : warning LNK4204: 'C:\Users\Daniel Greening\Documents\Visual Studio 2010\Projects\Project2\Image-Processing-Using-GPU\Debug\vc100.pdb' is missing debugging information for referencing module; linking object as if no debug info
+     1>SOIL.lib(stb_image_aug.obj) : warning LNK4204: 'C:\Users\Daniel Greening\Documents\Visual Studio 2010\Projects\Project2\Image-Processing-Using-GPU\Debug\vc100.pdb' is missing debugging information for referencing module; linking object as if no debug info
          ImageProcessing.vcxproj -> C:\Users\Daniel Greening\Documents\Visual Studio 2010\Projects\Project2\Image-Processing-Using-GPU\Debug\ImageProcessing.exe
        Manifest:
          C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Daniel Greening\Documents\Visual Studio 2010\Projects\Project2\Image-Processing-Using-GPU\Debug\ImageProcessing.exe;#1" /manifest Debug\ImageProcessing.exe.intermediate.manifest
@@ -21,4 +23,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.89
+Time Elapsed 00:00:00.78
