@@ -11,6 +11,7 @@ Functions
 //Function identifiers
 void openGLDrawScene();
 void prepareShaders();
+void prepareTexture();
 void changeSize(int, int);
 int openGLInit(GLvoid);
 

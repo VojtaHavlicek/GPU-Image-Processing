@@ -54,9 +54,6 @@ void onKeyboard(unsigned char key, int x, int y)
         break;
     }
 }
-
-
-
 int main(int argc, char **argv)
 {
 	
@@ -97,7 +94,8 @@ int main(int argc, char **argv)
 	/**
 	Pre-run application entry point
 	*/
-
+	changeSize(W, H);
+	prepareTexture(); // prepares the texture to be displayed.
 	//prepareShaders();  //shaders disabled while trying out textures
 
 	/**
@@ -115,8 +113,7 @@ Check if it does not collide with GLUT initialization.
 */
 
 int openGLInit(GLvoid)
-{
-	
+{	
 	return 0;
 }
 
@@ -142,11 +139,32 @@ void prepareShaders()
 	shaderProgram.run();
 }
 
+
+/**
+Prepares texture for later usage
+*/
+GLuint textureHandler; //I think this needs to be GLuint instead of unsigned int
+void prepareTexture()
+{
+	glEnable(GL_TEXTURE_2D);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); //prevents image from bleeding over to other side
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); //same but for in other axis
+	
+	textureHandler = SOIL_load_OGL_texture("src/artwork.png",
+							SOIL_LOAD_AUTO,
+							SOIL_CREATE_NEW_ID,
+							NULL);
+
+	cout << "textureHandler trace: "<< textureHandler << "\n";
+	
+	glBindTexture(GL_TEXTURE_2D, textureHandler);  
+}
+
 //-----------------------------------------------------------------------------------------
 //
 //	An entry point function for all OpenGL drawing. Called at onDisplay.
 //
-GLuint textureHandler; //I think this needs to be GLuint instead of unsigned int
+
 GLint colorLoc; //Location of colorVec
 float red=0.5;
 bool colorForward=true;
@@ -154,7 +172,7 @@ bool colorForward=true;
 void openGLDrawScene() 
 {	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
+	//glLoadIdentity();
 	
 	//colorLoc = glGetUniformLocation(shaderProgram.program, "colorVec"); //gets location of colorVec
 	//glUniform4f(colorLoc, sin(red), 0.0f, 1.0f, 1.0f); //modifies colorVec
@@ -173,61 +191,48 @@ void openGLDrawScene()
 		}
 	}
 	*/
-	glEnable(GL_TEXTURE_2D);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); //prevents image from bleeding over to other side
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); //same but for in other axis
-	
-	textureHandler = SOIL_load_OGL_texture("src/artwork.png",
-							SOIL_LOAD_AUTO,
-							SOIL_CREATE_NEW_ID,
-							SOIL_FLAG_INVERT_Y);
-
-	cout << "textureHandler "<< textureHandler << "\n";
-	
-	glBindTexture(GL_TEXTURE_2D, textureHandler);   
+	 
 
 
-	glTranslated(-1.0,-1.0,0.0);
+	//glTranslated(-1.0,-1.0,0.0);
 	glBegin(GL_QUADS);
 		//glColor3d(1.0,1.0,1.0);
 		glTexCoord2f(0.0f, 0.0f);
 		glVertex2d(0.0,0.0);
 
 		//glColor3d(1.0,0.0,1.0);
-		glTexCoord2f(1.0f, 0.0f); // TexCoords are normalized, in range [0,1]
-		glVertex2d(2.0,0.0);
+		glTexCoord2f(1.0, 0.0f); // TexCoords are normalized, in range [0,1]
+		glVertex2d(W,0.0);
 
 		//glColor3d(1.0,1.0,0.0);
-		glTexCoord2f(1.0f, 1.0f);
-		glVertex2d(2.0,2.0);
+		glTexCoord2f(1.0, 1.0);
+		glVertex2d(W,H);
 		
 		//glColor3d(0.0,1.0,1.0);
-		glTexCoord2f(0.0f, 1.0f);
-		glVertex2d(0.0,2.0);
+		glTexCoord2f(0.0f, 1.0);
+		glVertex2d(0.0,H);
 	glEnd();
 
 
-
+	//----------------
 	glutSwapBuffers();
 }
-
 void changeSize(int w, int h) {
 
-
+	cout << "Change size called. Applying glOrtho";
 	// Prevent a divide by zero, when window is too short
 	// (you cant make a window of zero width).
-	if(h == 0)
-		h = 1;
-
-	float ratio = 1.0* w / h;
-
+	
 	// Set the viewport to be the entire window
     glViewport(0, 0, w, h);
 
 	// Reset the coordinate system before modifying
 	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+	glLoadIdentity(); // Sets the GL_PROJECTION mtx to be identity mtx;
+	glOrtho(0.0,w,0.0,h,-1.0,1.0); //Multiplies the GL_PROJECTION mtx (identity) and sets the value to the new ortho mtx.
+	glScaled(1.0,-1.0,1.0); // Scales and inverts the Y axis;
+	glTranslated(0.0,-h,0.0); // 
 	
-	
+	//glMatrixMode(GL_TEXTURE
 	
 }
