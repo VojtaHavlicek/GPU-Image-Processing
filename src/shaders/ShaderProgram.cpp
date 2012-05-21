@@ -76,12 +76,12 @@ void ShaderProgram::prepareProgram()
 	{
 		
 		//std::cout << "Test trace from shader program" << *it << "\n";
-		char* source = *it;									              // links source to a new var;
+		char* source = *it;									                  // links source to a new var;
 		GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);	          // creates a shader;
 
 		const char* constSource = source;
-		glShaderSource(fragmentShader,   1, &constSource, NULL);                 // attachess source to the shader;
-		free(source);													  // frees the memory occupied by sourcecode;
+		glShaderSource(fragmentShader,   1, &constSource, NULL);              // attachess source to the shader;
+		free(source);													      // frees the memory occupied by sourcecode;
 
 		glCompileShader(fragmentShader);									  // compiles the shader
 		glAttachShader(program, fragmentShader);							  // attaches the shader to the program

@@ -2,8 +2,8 @@
 bool fullscreen = false;
 
 //Dimensions of the window
-float W = 512.0;
-float H = 512.0;
+float W = 400.0;
+float H = 300.0;
 
 /**
 Functions

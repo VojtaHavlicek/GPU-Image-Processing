@@ -61,17 +61,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\shaders\monoColorTest\MonoColorShader.cpp" />
     <ClCompile Include="src\shaders\ShaderProgram.cpp" />
     <ClCompile Include="src\ImageProcessing.cpp" />
+    <ClCompile Include="src\shaders\testIPShader\TestIPShader.cpp" />
     <ClCompile Include="src\textfile\textfile.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="images\artwork.png" />
     <None Include="README" />
+    <None Include="src\artwork.png" />
     <None Include="src\shaders\monoColorTest\testFragmentShader.frag" />
     <None Include="src\shaders\monoColorTest\testVertexShader.vert" />
+    <None Include="src\shaders\testIPShader\testFragmentShader.frag" />
+    <None Include="src\shaders\testIPShader\testVertexShader.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\shaders\monoColorTest\MonoColorShader.h" />
+    <ClInclude Include="src\shaders\Shaders.h" />
+    <ClInclude Include="src\shaders\testIPShader\TestIPShader.h" />
     <ClInclude Include="src\soil\SOIL.h" />
     <ClInclude Include="src\shaders\ShaderProgram.h" />
     <ClInclude Include="src\ImageProcessing.h" />

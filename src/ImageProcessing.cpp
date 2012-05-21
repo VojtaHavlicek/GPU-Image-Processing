@@ -17,9 +17,9 @@
 #include <string>
 #include <cmath>
 #include "textfile/textfile.h"     // includes textfile manipulation utilities
-#include "shaders/ShaderProgram.h" // includes the ShaderProgram Class
+#include "shaders/Shaders.h"       // includes the ShaderProgram Class
 #include "ImageProcessing.h"       // includes interface for the file (function definitions). Always include as last !!!
-#include "soil/SOIL.h" // Soil 
+#include "soil/SOIL.h"             // Soil 
 
 //
 // Uses the standard namespace for io operations
@@ -131,9 +131,9 @@ void prepareShaders()
 	Test for ShaderProgram Class
 	*/
 	
-	shaderProgram = ShaderProgram();
-	shaderProgram.addFragmentShaderSource("src/shaders/monoColorTest/testFragmentShader.frag");
-	shaderProgram.addVertexShaderSource("src/shaders/monoColorTest/testVertexShader.vert");
+	shaderProgram = MonoColorShader();
+	//shaderProgram.addFragmentShaderSource("src/shaders/monoColorTest/testFragmentShader.frag");
+	//shaderProgram.addVertexShaderSource("src/shaders/monoColorTest/testVertexShader.vert");
 	
 	shaderProgram.prepareProgram();
 	shaderProgram.run();
