@@ -76,7 +76,7 @@ int main(int argc, char **argv)
 	cout << "OpenGL version: "<< glGetString(GL_VERSION) << "\n";  // Check for OpenGL version
 	
 	glutDisplayFunc(openGLDrawScene);      
-	//glutIdleFunc(openGLDrawScene);
+	glutIdleFunc(openGLDrawScene);
 	glutKeyboardFunc(onKeyboard);
 	glutReshapeFunc(changeSize);
 	
@@ -96,7 +96,7 @@ int main(int argc, char **argv)
 	*/
 	changeSize(W, H);
 	prepareTexture(); // prepares the texture to be displayed.
-	//prepareShaders();  //shaders disabled while trying out textures
+	prepareShaders();  //shaders disabled while trying out textures
 
 	/**
 	Starts the main GLUT loop
@@ -174,23 +174,11 @@ void openGLDrawScene()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//glLoadIdentity();
 	
-	//colorLoc = glGetUniformLocation(shaderProgram.program, "colorVec"); //gets location of colorVec
-	//glUniform4f(colorLoc, sin(red), 0.0f, 1.0f, 1.0f); //modifies colorVec
-
-	/*
-	if(colorForward==true){ 
-		red+=0.0001f;
-		if(red>0.99f){
-			colorForward = false;
-		}
-	}
-	else{
-		red-=0.0001f;
-		if(red<0.01f){
-			colorForward = true;
-		}
-	}
-	*/
+	colorLoc = glGetUniformLocation(shaderProgram.program, "colorVec"); //gets location of colorVec
+	glUniform4f(colorLoc, sin(red), cos(red), sin(red)*cos(red)*2, 1.0f); //modifies colorVec
+	red+=0.001f;
+		
+	
 	 
 
 
@@ -219,7 +207,7 @@ void openGLDrawScene()
 }
 void changeSize(int w, int h) {
 
-	cout << "Change size called. Applying glOrtho";
+	cout << "Change size called. Applying glOrtho \n";
 	// Prevent a divide by zero, when window is too short
 	// (you cant make a window of zero width).
 	

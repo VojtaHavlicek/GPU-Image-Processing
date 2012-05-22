@@ -1,13 +1,13 @@
-﻿Build started 21/05/2012 21:49:25.
-     1>Project "D:\development\c\projects\OpenGL\ImageProcessing\ImageProcessing\ImageProcessing.vcxproj" on node 2 (build target(s)).
+﻿Build started 22/05/2012 11:07:47.
+     1>Project "D:\development\c\projects\OpenGL\ImageProcessing\ImageProcessing\ImageProcessing.vcxproj" on node 2 (rebuild target(s)).
      1>InitializeBuildStatus:
-         Touching "Debug\ImageProcessing.unsuccessfulbuild".
+         Creating "Debug\ImageProcessing.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt src\ImageProcessing.cpp src\shaders\monoColorTest\MonoColorShader.cpp src\shaders\testIPShader\TestIPShader.cpp
-         ImageProcessing.cpp
-         Generating Code...
-         Compiling...
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt src\shaders\monoColorTest\MonoColorShader.cpp src\shaders\ShaderProgram.cpp src\ImageProcessing.cpp src\shaders\testIPShader\TestIPShader.cpp src\textfile\textfile.cpp
+         textfile.cpp
          TestIPShader.cpp
+         ImageProcessing.cpp
+         ShaderProgram.cpp
          MonoColorShader.cpp
          Generating Code...
        Link:
@@ -27,8 +27,8 @@
        FinalizeBuildStatus:
          Deleting file "Debug\ImageProcessing.unsuccessfulbuild".
          Touching "Debug\ImageProcessing.lastbuildstate".
-     1>Done Building Project "D:\development\c\projects\OpenGL\ImageProcessing\ImageProcessing\ImageProcessing.vcxproj" (build target(s)).
+     1>Done Building Project "D:\development\c\projects\OpenGL\ImageProcessing\ImageProcessing\ImageProcessing.vcxproj" (rebuild target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:03.28
+Time Elapsed 00:00:03.23
