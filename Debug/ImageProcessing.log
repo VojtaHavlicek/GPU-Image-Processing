@@ -1,4 +1,4 @@
-﻿Build started 24/05/2012 10:43:40.
+﻿Build started 24/05/2012 11:35:50.
      1>Project "D:\development\c\projects\OpenGL\ImageProcessing\ImageProcessing\ImageProcessing.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\ImageProcessing.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -6,7 +6,8 @@
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt src\ImageProcessing.cpp
          ImageProcessing.cpp
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\development\c\projects\OpenGL\ImageProcessing\Debug\ImageProcessing.exe" /NOLOGO glew32.lib opengl32.lib glu32.lib glut32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\ImageProcessing.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\development\c\projects\OpenGL\ImageProcessing\Debug\ImageProcessing.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\development\c\projects\OpenGL\ImageProcessing\Debug\ImageProcessing.lib" /MACHINE:X86 Debug\MonoColorShader.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\development\c\projects\OpenGL\ImageProcessing\Debug\ImageProcessing.exe" /NOLOGO glew32.lib opengl32.lib glu32.lib glut32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\ImageProcessing.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\development\c\projects\OpenGL\ImageProcessing\Debug\ImageProcessing.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\development\c\projects\OpenGL\ImageProcessing\Debug\ImageProcessing.lib" /MACHINE:X86 Debug\BrightnessShader.obj
+         Debug\MonoColorShader.obj
          Debug\ShaderProgram.obj
          Debug\ImageProcessing.obj
          Debug\TestIPShader.obj
@@ -20,8 +21,6 @@
          ImageProcessing.vcxproj -> D:\development\c\projects\OpenGL\ImageProcessing\Debug\ImageProcessing.exe
        Manifest:
          C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"D:\development\c\projects\OpenGL\ImageProcessing\Debug\ImageProcessing.exe;#1" /manifest Debug\ImageProcessing.exe.intermediate.manifest
-       CopyFilesToOutputDirectory:
-         Copying file from "Debug\ImageProcessing.pdb" to "D:\development\c\projects\OpenGL\ImageProcessing\Debug\ImageProcessing.pdb".
        FinalizeBuildStatus:
          Deleting file "Debug\ImageProcessing.unsuccessfulbuild".
          Touching "Debug\ImageProcessing.lastbuildstate".
@@ -29,4 +28,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.83
+Time Elapsed 00:00:01.67

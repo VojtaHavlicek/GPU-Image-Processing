@@ -61,6 +61,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\shaders\BrightnessShader\BrightnessShader.cpp" />
     <ClCompile Include="src\shaders\monoColorTest\MonoColorShader.cpp" />
     <ClCompile Include="src\shaders\ShaderProgram.cpp" />
     <ClCompile Include="src\ImageProcessing.cpp" />
@@ -70,12 +71,15 @@
   <ItemGroup>
     <None Include="README" />
     <None Include="src\artwork.png" />
+    <None Include="src\shaders\BrightnessShader\BrightnessShader.frag" />
+    <None Include="src\shaders\BrightnessShader\BrightnessShader.vert" />
     <None Include="src\shaders\monoColorTest\testFragmentShader.frag" />
     <None Include="src\shaders\monoColorTest\testVertexShader.vert" />
     <None Include="src\shaders\testIPShader\testFragmentShader.frag" />
     <None Include="src\shaders\testIPShader\testVertexShader.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\shaders\BrightnessShader\BrightnessShader.h" />
     <ClInclude Include="src\shaders\monoColorTest\MonoColorShader.h" />
     <ClInclude Include="src\shaders\Shaders.h" />
     <ClInclude Include="src\shaders\testIPShader\TestIPShader.h" />

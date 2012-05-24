@@ -94,9 +94,10 @@ int main(int argc, char **argv)
 	/**
 	Pre-run application entry point
 	*/
-	changeSize(W, H);
+
 	prepareTexture(); // prepares the texture to be displayed.
 	//prepareShaders();  //shaders disabled while trying out textures
+	
 
 	/**
 	Starts the main GLUT loop
@@ -147,17 +148,24 @@ GLuint textureHandler; //I think this needs to be GLuint instead of unsigned int
 void prepareTexture()
 {
 	glEnable(GL_TEXTURE_2D);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); //prevents image from bleeding over to other side
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); //same but for in other axis
-	
+
 	textureHandler = SOIL_load_OGL_texture("src/artwork.png",
 							SOIL_LOAD_AUTO,
 							SOIL_CREATE_NEW_ID,
-							NULL);
+							SOIL_FLAG_MIPMAPS);
 
 	cout << "textureHandler trace: "<< textureHandler << "\n";
 	
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textureHandler);  
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT /*GL_CLAMP_TO_EDGE*/);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT /*GL_CLAMP_TO_EDGE*/);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, W, H, 0, GL_RGB,
+	//glActiveTexture(GL_TEXTURE_2D); ???
+	
 }
 
 //-----------------------------------------------------------------------------------------
@@ -165,7 +173,7 @@ void prepareTexture()
 //	An entry point function for all OpenGL drawing. Called at onDisplay.
 //
 
-GLint colorLoc; //Location of colorVec
+GLint location; //Location of Alpha
 float arg=0.5;
 bool colorForward=true;
 
@@ -174,9 +182,10 @@ void openGLDrawScene()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//glLoadIdentity();
 	
-	colorLoc = glGetUniformLocation(shaderProgram.program, "Alpha"); //gets location of colorVec
-	glUniform4f(colorLoc, sin(arg), cos(arg), sin(arg)*cos(arg)*2, 1.0f); //modifies colorVec
-	red+=0.001f;
+	//location = glGetUniformLocation(shaderProgram.program, "Alpha"); //gets location of colorVec
+	//glUniform4f(colorLoc, sin(arg), cos(arg), sin(arg)*cos(arg)*2, 1.0f); //modifies colorVec
+	//glUniform1f(location,sin(arg));
+	//arg+=0.001f;
 		
 	
 	 
