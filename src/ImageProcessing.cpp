@@ -96,7 +96,7 @@ int main(int argc, char **argv)
 	*/
 	changeSize(W, H);
 	prepareTexture(); // prepares the texture to be displayed.
-	prepareShaders();  //shaders disabled while trying out textures
+	//prepareShaders();  //shaders disabled while trying out textures
 
 	/**
 	Starts the main GLUT loop
@@ -131,7 +131,7 @@ void prepareShaders()
 	Test for ShaderProgram Class
 	*/
 	
-	shaderProgram = MonoColorShader();
+	shaderProgram = BrightnessShader();
 	//shaderProgram.addFragmentShaderSource("src/shaders/monoColorTest/testFragmentShader.frag");
 	//shaderProgram.addVertexShaderSource("src/shaders/monoColorTest/testVertexShader.vert");
 	
@@ -166,7 +166,7 @@ void prepareTexture()
 //
 
 GLint colorLoc; //Location of colorVec
-float red=0.5;
+float arg=0.5;
 bool colorForward=true;
 
 void openGLDrawScene() 
@@ -174,8 +174,8 @@ void openGLDrawScene()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//glLoadIdentity();
 	
-	colorLoc = glGetUniformLocation(shaderProgram.program, "colorVec"); //gets location of colorVec
-	glUniform4f(colorLoc, sin(red), cos(red), sin(red)*cos(red)*2, 1.0f); //modifies colorVec
+	colorLoc = glGetUniformLocation(shaderProgram.program, "Alpha"); //gets location of colorVec
+	glUniform4f(colorLoc, sin(arg), cos(arg), sin(arg)*cos(arg)*2, 1.0f); //modifies colorVec
 	red+=0.001f;
 		
 	
