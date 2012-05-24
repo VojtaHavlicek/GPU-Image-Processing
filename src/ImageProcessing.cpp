@@ -144,27 +144,31 @@ void prepareShaders()
 /**
 Prepares texture for later usage
 */
-GLuint textureHandler; //I think this needs to be GLuint instead of unsigned int
+GLuint textureHandler = 1; //I think this needs to be GLuint instead of unsigned int
+unsigned char* imageDataPointer;
+int channels = 3;
 void prepareTexture()
 {
 	glEnable(GL_TEXTURE_2D);
 
-	textureHandler = SOIL_load_OGL_texture("src/artwork.png",
+	imageDataPointer = SOIL_load_image("src/artwork.png", &W, &H, &channels, SOIL_LOAD_RGBA);
+
+	/*textureHandler = SOIL_load_OGL_texture("src/artwork.png",
 							SOIL_LOAD_AUTO,
 							SOIL_CREATE_NEW_ID,
-							SOIL_FLAG_MIPMAPS);
+							SOIL_FLAG_MIPMAPS);*/
 
 	cout << "textureHandler trace: "<< textureHandler << "\n";
 	
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textureHandler);  
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT /*GL_CLAMP_TO_EDGE*/);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT /*GL_CLAMP_TO_EDGE*/);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, W, H, 0, GL_RGBA, GL_UNSIGNED_BYTE, (const GLvoid*) imageDataPointer);
+
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT /*GL_CLAMP_TO_EDGE*/);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT /*GL_CLAMP_TO_EDGE*/);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, W, H, 0, GL_RGB,
-	//glActiveTexture(GL_TEXTURE_2D); ???
 	
 }
 
@@ -187,12 +191,9 @@ void openGLDrawScene()
 	//glUniform1f(location,sin(arg));
 	//arg+=0.001f;
 		
-	
-	 
-
-
+	glDrawPixels(W, H, GL_RGBA, GL_UNSIGNED_BYTE, (const GLvoid*) imageDataPointer);
 	//glTranslated(-1.0,-1.0,0.0);
-	glBegin(GL_QUADS);
+	/*glBegin(GL_QUADS);
 		//glColor3d(1.0,1.0,1.0);
 		glTexCoord2f(0.0f, 0.0f);
 		glVertex2d(0.0,0.0);
@@ -208,7 +209,7 @@ void openGLDrawScene()
 		//glColor3d(0.0,1.0,1.0);
 		glTexCoord2f(0.0f, 1.0);
 		glVertex2d(0.0,H);
-	glEnd();
+	glEnd();*/
 
 
 	//----------------
