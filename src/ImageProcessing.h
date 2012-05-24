@@ -2,8 +2,8 @@
 bool fullscreen = false;
 
 //Dimensions of the window
- int W = 400.0;
- int H = 300.0;
+ int W = 240;
+ int H = 240;
 
 /**
 Functions

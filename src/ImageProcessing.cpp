@@ -76,7 +76,7 @@ int main(int argc, char **argv)
 	cout << "OpenGL version: "<< glGetString(GL_VERSION) << "\n";  // Check for OpenGL version
 	
 	glutDisplayFunc(openGLDrawScene);      
-	glutIdleFunc(openGLDrawScene);
+	//glutIdleFunc(openGLDrawScene);
 	glutKeyboardFunc(onKeyboard);
 	glutReshapeFunc(changeSize);
 	
@@ -88,7 +88,7 @@ int main(int argc, char **argv)
 
 	if(GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader)
 	{
-		cout << "Shaders supported" << "\n";
+		cout << "ARB extensions supported" << "\n";
 	}
 
 	/**
@@ -96,14 +96,15 @@ int main(int argc, char **argv)
 	*/
 
 	prepareTexture(); // prepares the texture to be displayed.
-	//prepareShaders();  //shaders disabled while trying out textures
-	
+	prepareShaders();  //shaders disabled while trying out textures
 
 	/**
 	Starts the main GLUT loop
 	*/
 	glutMainLoop(); //starts the main loop of the app.
 
+	
+	
     return 0;             
 }
 
@@ -137,33 +138,38 @@ void prepareShaders()
 	//shaderProgram.addVertexShaderSource("src/shaders/monoColorTest/testVertexShader.vert");
 	
 	shaderProgram.prepareProgram();
-	shaderProgram.run();
+	//shaderProgram.run();
+
+
 }
 
 
 /**
 Prepares texture for later usage
 */
-GLuint textureHandler = 1; //I think this needs to be GLuint instead of unsigned int
+GLuint textureHandler = 0; //I think this needs to be GLuint instead of unsigned int
 unsigned char* imageDataPointer;
-int channels = 3;
+int channels = 4;
 void prepareTexture()
 {
 	glEnable(GL_TEXTURE_2D);
 
-	imageDataPointer = SOIL_load_image("src/artwork.png", &W, &H, &channels, SOIL_LOAD_RGBA);
-
-	/*textureHandler = SOIL_load_OGL_texture("src/artwork.png",
-							SOIL_LOAD_AUTO,
-							SOIL_CREATE_NEW_ID,
-							SOIL_FLAG_MIPMAPS);*/
-
-	cout << "textureHandler trace: "<< textureHandler << "\n";
+	//imageDataPointer = SOIL_load_image("src/artwork.png", &W, &H, &channels, SOIL_LOAD_RGBA);
 	
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, textureHandler);  
-	glTexImage2D(GL_TEXTURE_2D, 0, 4, W, H, 0, GL_RGBA, GL_UNSIGNED_BYTE, (const GLvoid*) imageDataPointer);
+	glActiveTextureARB(GL_TEXTURE0);
+	textureHandler = SOIL_load_OGL_texture("src/artwork.png",
+							SOIL_LOAD_RGBA,
+							SOIL_CREATE_NEW_ID,
+							NULL);
 
+	
+	/*
+	glActiveTexture(GL_TEXTURE0);
+	glGenTextures(1,&textureHandler);
+	glBindTexture(GL_TEXTURE_2D, textureHandler);  
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, W, H, 0, GL_RGBA, GL_UNSIGNED_BYTE, (const GLvoid*) imageDataPointer);*/
+	
+	cout << "textureHandler trace: "<< textureHandler << "\n";
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT /*GL_CLAMP_TO_EDGE*/);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT /*GL_CLAMP_TO_EDGE*/);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -191,25 +197,36 @@ void openGLDrawScene()
 	//glUniform1f(location,sin(arg));
 	//arg+=0.001f;
 		
-	glDrawPixels(W, H, GL_RGBA, GL_UNSIGNED_BYTE, (const GLvoid*) imageDataPointer);
+	//glDrawPixels(W, H, GL_RGBA, GL_UNSIGNED_BYTE, (const GLvoid*) imageDataPointer);
 	//glTranslated(-1.0,-1.0,0.0);
-	/*glBegin(GL_QUADS);
+
+	glBindTexture(GL_TEXTURE_2D, textureHandler);
+	cout << "check textureHandler trace: "<< textureHandler << "\n";
+	
+	
+
+	GLint location = glGetUniformLocationARB(shaderProgram.program, "tex");
+	glUniform1iARB(location, GL_TEXTURE0_ARB); //handler or unit?
+	
+	shaderProgram.run();
+
+	glBegin(GL_QUADS);
 		//glColor3d(1.0,1.0,1.0);
-		glTexCoord2f(0.0f, 0.0f);
+		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 0.0f);
 		glVertex2d(0.0,0.0);
 
 		//glColor3d(1.0,0.0,1.0);
-		glTexCoord2f(1.0, 0.0f); // TexCoords are normalized, in range [0,1]
+		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0, 0.0f); // TexCoords are normalized, in range [0,1]
 		glVertex2d(W,0.0);
 
 		//glColor3d(1.0,1.0,0.0);
-		glTexCoord2f(1.0, 1.0);
+		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0, 1.0);
 		glVertex2d(W,H);
 		
 		//glColor3d(0.0,1.0,1.0);
-		glTexCoord2f(0.0f, 1.0);
+		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 1.0);
 		glVertex2d(0.0,H);
-	glEnd();*/
+	glEnd();
 
 
 	//----------------
