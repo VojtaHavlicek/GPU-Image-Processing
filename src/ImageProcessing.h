@@ -10,6 +10,7 @@ Functions
 */
 //Function identifiers
 void openGLDrawScene();
+void openGLInitScene();
 void prepareShaders();
 void prepareTexture();
 void changeSize(int, int);

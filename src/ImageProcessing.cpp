@@ -60,7 +60,6 @@ int main(int argc, char **argv)
 	
 	cout << "Image Processing Using GPU \n\nCreated by Vojtech Havlicek & Daniel Greening (2012)\nSupervised by Lionel Fachkamps\nImperial College\n---\nOutput:\n";
 
-	
 	/**
 	Prepares GLUT
 	*/
@@ -68,39 +67,29 @@ int main(int argc, char **argv)
 	glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(W,H);
 	glutInitWindowPosition(200,200);
-
-	/**
-	Create the new Window
-	*/
     win1 = glutCreateWindow("Image Processing Project");
+	
 	cout << "OpenGL version: "<< glGetString(GL_VERSION) << "\n";  // Check for OpenGL version
 	
 	glutDisplayFunc(openGLDrawScene);      
-	//glutIdleFunc(openGLDrawScene);
+	glutIdleFunc(openGLDrawScene);
 	glutKeyboardFunc(onKeyboard);
 	glutReshapeFunc(changeSize);
 	
 	glClearColor(0.0,0.0,0.0,1.0);
-	//glEnable(GL_CULL_FACE);
-
-	//OpenGLInit();
+	
 	glewInit();
 
 	if(GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader)
-	{
 		cout << "ARB extensions supported" << "\n";
-	}
+	
 
-	/**
-	Pre-run application entry point
-	*/
+
 
 	prepareTexture(); // prepares the texture to be displayed.
 	prepareShaders();  //shaders disabled while trying out textures
 
-	/**
-	Starts the main GLUT loop
-	*/
+	openGLInitScene();
 	glutMainLoop(); //starts the main loop of the app.
 
 	
@@ -129,125 +118,87 @@ ShaderProgram shaderProgram;
 
 void prepareShaders()
 {
-	/**
-	Test for ShaderProgram Class
-	*/
-	
 	shaderProgram = BrightnessShader();
-	//shaderProgram.addFragmentShaderSource("src/shaders/monoColorTest/testFragmentShader.frag");
-	//shaderProgram.addVertexShaderSource("src/shaders/monoColorTest/testVertexShader.vert");
-	
 	shaderProgram.prepareProgram();
-	//shaderProgram.run();
-
-
 }
 
 
 /**
 Prepares texture for later usage
 */
-GLuint textureHandler = 0; //I think this needs to be GLuint instead of unsigned int
-unsigned char* imageDataPointer;
-int channels = 4;
+GLuint textureHandler;
 void prepareTexture()
 {
 	glEnable(GL_TEXTURE_2D);
-
-	//imageDataPointer = SOIL_load_image("src/artwork.png", &W, &H, &channels, SOIL_LOAD_RGBA);
 	
 	glActiveTextureARB(GL_TEXTURE0);
 	textureHandler = SOIL_load_OGL_texture("src/artwork.png",
 							SOIL_LOAD_RGBA,
 							SOIL_CREATE_NEW_ID,
 							NULL);
-
-	
-	/*
-	glActiveTexture(GL_TEXTURE0);
-	glGenTextures(1,&textureHandler);
-	glBindTexture(GL_TEXTURE_2D, textureHandler);  
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, W, H, 0, GL_RGBA, GL_UNSIGNED_BYTE, (const GLvoid*) imageDataPointer);*/
 	
 	cout << "textureHandler trace: "<< textureHandler << "\n";
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT /*GL_CLAMP_TO_EDGE*/);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT /*GL_CLAMP_TO_EDGE*/);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	
 	
+}
+
+/**
+Inits the whole scene. All stuff about setting of uniforms should be done here.
+*/
+GLint location; //Location of Alpha
+GLint brightnessLevel;
+
+void openGLInitScene()
+{
+    location = glGetUniformLocationARB(shaderProgram.program, "tex");
+	glUniform1iARB(location, GL_TEXTURE0_ARB); //handler or unit?
+
+	//--- Starts the program
+	shaderProgram.run();
 }
 
 //-----------------------------------------------------------------------------------------
 //
 //	An entry point function for all OpenGL drawing. Called at onDisplay.
 //
-
-GLint location; //Location of Alpha
-float arg=0.5;
-bool colorForward=true;
-
+double a = 0;
 void openGLDrawScene() 
 {	
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//glLoadIdentity();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 	
-	//location = glGetUniformLocation(shaderProgram.program, "Alpha"); //gets location of colorVec
-	//glUniform4f(colorLoc, sin(arg), cos(arg), sin(arg)*cos(arg)*2, 1.0f); //modifies colorVec
-	//glUniform1f(location,sin(arg));
-	//arg+=0.001f;
-		
-	//glDrawPixels(W, H, GL_RGBA, GL_UNSIGNED_BYTE, (const GLvoid*) imageDataPointer);
-	//glTranslated(-1.0,-1.0,0.0);
-
 	glBindTexture(GL_TEXTURE_2D, textureHandler);
-	cout << "check textureHandler trace: "<< textureHandler << "\n";
 	
-	
-
-	GLint location = glGetUniformLocationARB(shaderProgram.program, "tex");
-	glUniform1iARB(location, GL_TEXTURE0_ARB); //handler or unit?
-	
-	shaderProgram.run();
+	brightnessLevel = glGetUniformLocationARB(shaderProgram.program, "brightness");
+					  glUniform1fARB(brightnessLevel, (GLfloat)((sin(a)+1)/2));
+	a += 0.001;
 
 	glBegin(GL_QUADS);
-		//glColor3d(1.0,1.0,1.0);
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 0.0f);
 		glVertex2d(0.0,0.0);
 
-		//glColor3d(1.0,0.0,1.0);
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0, 0.0f); // TexCoords are normalized, in range [0,1]
 		glVertex2d(W,0.0);
 
-		//glColor3d(1.0,1.0,0.0);
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0, 1.0);
 		glVertex2d(W,H);
 		
-		//glColor3d(0.0,1.0,1.0);
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 1.0);
 		glVertex2d(0.0,H);
 	glEnd();
 
-
 	//----------------
 	glutSwapBuffers();
 }
-void changeSize(int w, int h) {
 
-	cout << "Change size called. Applying glOrtho \n";
-	// Prevent a divide by zero, when window is too short
-	// (you cant make a window of zero width).
-	
-	// Set the viewport to be the entire window
+/*
+changes size of the window
+*/
+void changeSize(int w, int h) 
+{
     glViewport(0, 0, w, h);
-
-	// Reset the coordinate system before modifying
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity(); // Sets the GL_PROJECTION mtx to be identity mtx;
 	glOrtho(0.0,w,0.0,h,-1.0,1.0); //Multiplies the GL_PROJECTION mtx (identity) and sets the value to the new ortho mtx.
 	glScaled(1.0,-1.0,1.0); // Scales and inverts the Y axis;
-	glTranslated(0.0,-h,0.0); // 
-	
-	//glMatrixMode(GL_TEXTURE
-	
+	glTranslated(0.0,-h,0.0); // 	
 }
