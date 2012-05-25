@@ -25,9 +25,9 @@ void main()
 	int Y = 0;
 	int X = 0;
 	
-	for(Y = -3; Y < 3; Y++)
+	for(Y = -3; Y <= 3; Y++)
 	{
-		for(X = -3; X < 3; X++)
+		for(X = -3; X <= 3; X++)
 		{
 			
 
@@ -59,7 +59,7 @@ void main()
 			*/
 			if(X == 0 && Y == 0)
 			{
-				factor = sin(time/5)*8 + 16;
+				factor = sin(time/5)*2 + 32;
 			}
 
 			color += getPixel(X,Y)*factor;
