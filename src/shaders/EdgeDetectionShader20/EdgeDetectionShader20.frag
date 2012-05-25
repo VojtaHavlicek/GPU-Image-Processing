@@ -16,40 +16,56 @@ vec4 getPixel(float dx, float dy)
 
 void main()
 {
-	/*
-		-1 -1 -1
-		-1  8 -1
-		-1 -1 -1
-	*/
+	
 	vec4  color = vec4(0.0,0.0,0.0,0.0);
 	float factor = 1.0;
 	
-	float tempLen = 10*(0.5*(sin(time) + 1));
-	int len = int (tempLen)+1;
+	
 
-	for(int i = 0; i < len; i++)
+	int Y = 0;
+	int X = 0;
+	
+	for(Y = -3; Y < 3; Y++)
 	{
-		color += (getPixel(0,i)/len);
-	}
-
-	/*int Y;
-	int X;
-
-	for(Y = -2; Y < 2; Y++)
-		for(X = -2; X < 2; X++)
+		for(X = -3; X < 3; X++)
 		{
-			if(X == 0 && Y == 0)
-				factor = 16;
+			
 
 			if(X*X == 1 || Y*Y == 1)
+			{
 				factor = -1;
+			}
 
 			if(X*X == 4 || Y*Y == 4)
+			{
 				factor = -.5;
+			}
 
-			color += factor*getPixel(X, Y);
-		} 
-	}*/
+			if(X*X == 9 || Y*Y == 9)
+			{
+				factor = -1;
+			}
+
+			/**
+			Corner texels
+			*/
+			if(X*X == Y*Y)
+			{
+				factor *= 0.7;
+			}
+
+			/**
+			Center texel (biggest priority)
+			*/
+			if(X == 0 && Y == 0)
+			{
+				factor = sin(time/5)*8 + 16;
+			}
+
+			color += getPixel(X,Y)*factor;
+		}
+	}
+
 	gl_FragColor = color;
 }
 
