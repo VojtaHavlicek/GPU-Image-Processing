@@ -15,7 +15,8 @@ vec4 getPixel(float dx, float dy)
 
 void main()
 {
-	vec4 color = getPixel(20*sin(time), 0);
+	vec4 color = getPixel(20*((sin(time)), 0);
+
 	gl_FragColor = color;
 }
 

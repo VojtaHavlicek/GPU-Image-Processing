@@ -16,7 +16,12 @@ vec4 getPixel(float dx, float dy)
 
 void main()
 {
-	vec4 color = 4*getPixel(0, 0) - getPixel(-1,0) - getPixel(1,0) - getPixel(0,-1) - getPixel(0,1);
+	/*
+		-1 -1 -1
+		-1  8 -1
+		-1 -1 -1
+	*/
+	vec4 color = 8*getPixel(0, 0) - getPixel(-1,0) - getPixel(1,0) - getPixel(0,-1) - getPixel(0,1) - getPixel(1,1) - getPixel(-1,-1) - getPixel(-1,1) - getPixel(1,-1);
 	gl_FragColor = color;
 }
 

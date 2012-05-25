@@ -118,7 +118,7 @@ ShaderProgram shaderProgram;
 
 void prepareShaders()
 {
-	shaderProgram = BrightnessShader();
+	shaderProgram = EdgeDetectionShader();
 	shaderProgram.prepareProgram();
 }
 
@@ -133,7 +133,7 @@ void prepareTexture()
 	
 	glActiveTextureARB(GL_TEXTURE0);
 	textureHandler = SOIL_load_OGL_texture("src/artwork.png",
-							SOIL_LOAD_RGBA,
+							SOIL_LOAD_AUTO,
 							SOIL_CREATE_NEW_ID,
 							NULL);
 	
@@ -146,12 +146,21 @@ void prepareTexture()
 Inits the whole scene. All stuff about setting of uniforms should be done here.
 */
 GLint location; //Location of Alpha
+GLint width;
+GLint height;
 GLint brightnessLevel;
 
 void openGLInitScene()
 {
     location = glGetUniformLocationARB(shaderProgram.program, "tex");
-	glUniform1iARB(location, GL_TEXTURE0_ARB); //handler or unit?
+	glUniform1iARB(location, GL_TEXTURE0_ARB); 
+
+	//passes dimension of the image to shader
+	width = glGetUniformLocationARB(shaderProgram.program, "width");
+	glUniform1fARB(width, (float) W);
+
+	height = glGetUniformLocationARB(shaderProgram.program, "height");
+	glUniform1fARB(width, (float) H);
 
 	//--- Starts the program
 	shaderProgram.run();
