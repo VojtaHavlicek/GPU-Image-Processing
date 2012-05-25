@@ -5,10 +5,10 @@ TestIPShader Class definition
 
 #pragma once
 
-class MonoColorShader :public ShaderProgram
+class ShakeShader :public ShaderProgram
 {
 public :
-	MonoColorShader(void);
-	~MonoColorShader(void);
+	ShakeShader(void);
+	~ShakeShader(void);
 	
 };
