@@ -1,0 +1,38 @@
+﻿Build started 22/05/2012 11:07:45.
+     1>Project "D:\development\c\projects\OpenGL\ImageProcessing\ImageProcessing\ImageProcessing.vcxproj" on node 2 (rebuild target(s)).
+     1>InitializeBuildStatus:
+         Touching "Release\ImageProcessing.unsuccessfulbuild".
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt src\shaders\monoColorTest\MonoColorShader.cpp src\shaders\ShaderProgram.cpp src\ImageProcessing.cpp src\shaders\testIPShader\TestIPShader.cpp src\textfile\textfile.cpp
+         MonoColorShader.cpp
+         ShaderProgram.cpp
+         ImageProcessing.cpp
+         TestIPShader.cpp
+         textfile.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\development\c\projects\OpenGL\ImageProcessing\Release\ImageProcessing.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\ImageProcessing.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\development\c\projects\OpenGL\ImageProcessing\Release\ImageProcessing.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\development\c\projects\OpenGL\ImageProcessing\Release\ImageProcessing.lib" /MACHINE:X86 Release\MonoColorShader.obj
+         Release\ShaderProgram.obj
+         Release\ImageProcessing.obj
+         Release\TestIPShader.obj
+         Release\textfile.obj
+         src\soil\SOIL.lib
+     1>SOIL.lib(SOIL.obj) : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:ICF' specification
+     1>LINK : warning LNK4098: defaultlib 'MSVCRTD' conflicts with use of other libs; use /NODEFAULTLIB:library
+     1>ShaderProgram.obj : error LNK2001: unresolved external symbol __imp____glewCreateShader
+     1>ShaderProgram.obj : error LNK2001: unresolved external symbol __imp____glewLinkProgram
+     1>ShaderProgram.obj : error LNK2001: unresolved external symbol __imp____glewCompileShader
+     1>ShaderProgram.obj : error LNK2001: unresolved external symbol __imp____glewUseProgram
+     1>ShaderProgram.obj : error LNK2001: unresolved external symbol __imp____glewShaderSource
+     1>ShaderProgram.obj : error LNK2001: unresolved external symbol __imp____glewCreateProgram
+     1>ShaderProgram.obj : error LNK2001: unresolved external symbol __imp____glewAttachShader
+     1>ImageProcessing.obj : error LNK2001: unresolved external symbol __imp__glewInit
+     1>ImageProcessing.obj : error LNK2001: unresolved external symbol __imp____GLEW_ARB_vertex_shader
+     1>ImageProcessing.obj : error LNK2001: unresolved external symbol __imp____GLEW_ARB_fragment_shader
+     1>ImageProcessing.obj : error LNK2001: unresolved external symbol __imp____glewUniform4f
+     1>ImageProcessing.obj : error LNK2001: unresolved external symbol __imp____glewGetUniformLocation
+     1>D:\development\c\projects\OpenGL\ImageProcessing\Release\ImageProcessing.exe : fatal error LNK1120: 12 unresolved externals
+     1>Done Building Project "D:\development\c\projects\OpenGL\ImageProcessing\ImageProcessing\ImageProcessing.vcxproj" (rebuild target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:02.53

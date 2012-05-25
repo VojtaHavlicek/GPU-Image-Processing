@@ -15,9 +15,11 @@
 #include <GL/glut.h> // header file of GLUT functions
 #include <iostream>  // input/output stream for debug
 #include <string>
+#include <cmath>
 #include "textfile/textfile.h"     // includes textfile manipulation utilities
-#include "shaders/ShaderProgram.h" // includes the ShaderProgram Class
+#include "shaders/Shaders.h"       // includes the ShaderProgram Class
 #include "ImageProcessing.h"       // includes interface for the file (function definitions). Always include as last !!!
+#include "soil/SOIL.h"             // Soil 
 
 //
 // Uses the standard namespace for io operations
@@ -26,28 +28,25 @@ using namespace std;
 
 
 
-//
-// Funkce vstupu klavesnice
-//
 void onKeyboard(unsigned char key, int x, int y)
 {
-	key=(key>'A' && key<='Z') ? key+'a'-'A':key; // prevod na mala pismena
+	key=(key>'A' && key<='Z') ? key+'a'-'A':key; 
     switch (key) {
 		
 		//--- EXIT CASES
-        case 'x':                       // stlaceni techto klaves uzavre aplikaci
+        case 'x':                 
         case 'q':
-        case 27:                        // 27 je kod klavesy ESC
+        case 27:          
             exit(0);
         break;
         
 		//----------------------------------
-		case 'f':  // klavesa 'f' zpusobi
+		case 'f': 
 			if(!fullscreen){
 				fullscreen = true;
-				glutFullScreen();           // prepnuti na celou obrazovku
+				glutFullScreen();           
 			}else{
-				glutReshapeWindow(W, H);// zmenseni okna
+				glutReshapeWindow(W, H);
 				glutPositionWindow(200, 200);
 				fullscreen = false;
 			}
@@ -55,61 +54,47 @@ void onKeyboard(unsigned char key, int x, int y)
         break;
     }
 }
-
-ShaderProgram shaderProgram;
-
-//---------------------------------------------------------------------
-// Hlavni funkce konzolove aplikace
-//---------------------------------------------------------------------
 int main(int argc, char **argv)
 {
 	
 	
 	cout << "Image Processing Using GPU \n\nCreated by Vojtech Havlicek & Daniel Greening (2012)\nSupervised by Lionel Fachkamps\nImperial College\n---\nOutput:\n";
 
-	
 	/**
 	Prepares GLUT
 	*/
-    glutInit(&argc, argv);              // inicializace knihovny GLUT
-	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+    glutInit(&argc, argv);
+	glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(W,H);
 	glutInitWindowPosition(200,200);
-
-	/**
-	Create the new Window
-	*/
-    win1 = glutCreateWindow("Image Processing Project");// vytvoreni okna pro kresleni
+    win1 = glutCreateWindow("Image Processing Project");
 	
-	glutDisplayFunc(openGLDrawScene);         // registrace funkce volane pri prekreslovani okna
+	cout << "OpenGL version: "<< glGetString(GL_VERSION) << "\n";  // Check for OpenGL version
+	
+	glutDisplayFunc(openGLDrawScene);      
 	glutIdleFunc(openGLDrawScene);
 	glutKeyboardFunc(onKeyboard);
 	glutReshapeFunc(changeSize);
 	
-	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.0,0.0,0.0,1.0);
-	glEnable(GL_CULL_FACE);
-
-	//OpenGLInit();
+	
 	glewInit();
 
 	if(GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader)
-	{
-		cout << "Shaders supported" << "\n";
-	}
+		cout << "ARB extensions supported" << "\n";
+	
 
-	/**
-	Pre-run application entry point
-	*/
 
-	prepareShaders();
 
-	/**
-	Starts the main GLUT loop
-	*/
+	prepareTexture(); // prepares the texture to be displayed.
+	prepareShaders();  //shaders disabled while trying out textures
+
+	openGLInitScene();
 	glutMainLoop(); //starts the main loop of the app.
 
-    return 0;                           // navratova hodnota vracena operacnimu systemu
+	
+	
+    return 0;             
 }
 
 
@@ -119,16 +104,7 @@ Check if it does not collide with GLUT initialization.
 */
 
 int openGLInit(GLvoid)
-{
-	glShadeModel(GL_SMOOTH); //Enables smooth shading
-
-	glClearDepth(1.0f);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
-
-	//Make perspective corrections
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-
+{	
 	return 0;
 }
 
@@ -138,86 +114,91 @@ Entry point for shader program production
 */
 //--- handlers to shaders
 
+ShaderProgram shaderProgram;
 
 void prepareShaders()
 {
-	/**
-	Test for ShaderProgram Class
-	*/
+	shaderProgram = BrightnessShader();
+	shaderProgram.prepareProgram();
+}
 
-	shaderProgram = ShaderProgram();
-	shaderProgram.addFragmentShaderSource("src/shaders/monoColorTest/testFragmentShader.frag");
-	shaderProgram.addVertexShaderSource("src/shaders/monoColorTest/testVertexShader.vert");
 
-	char *vertexShaderSource = NULL, *fragmentShaderSource = NULL; // Ref. to the first char of source?
+/**
+Prepares texture for later usage
+*/
+GLuint textureHandler;
+void prepareTexture()
+{
+	glEnable(GL_TEXTURE_2D);
 	
-	vertexShader   = glCreateShader(GL_VERTEX_SHADER); //Creates the both shaders
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glActiveTextureARB(GL_TEXTURE0);
+	textureHandler = SOIL_load_OGL_texture("src/artwork.png",
+							SOIL_LOAD_RGBA,
+							SOIL_CREATE_NEW_ID,
+							NULL);
+	
+	cout << "textureHandler trace: "<< textureHandler << "\n";
+	
+	
+}
 
-	vertexShaderSource   = shaderProgram.vertexShaderSources[0];//textFileRead("src/shaders/monoColorTest/testVertexShader.vert");
-	fragmentShaderSource = shaderProgram.fragmentShaderSources[0];//textFileRead("src/shaders/monoColorTest/testFragmentShader.frag");
+/**
+Inits the whole scene. All stuff about setting of uniforms should be done here.
+*/
+GLint location; //Location of Alpha
+GLint brightnessLevel;
 
-	const char *vv = vertexShaderSource;
-	const char *ff = fragmentShaderSource;
+void openGLInitScene()
+{
+    location = glGetUniformLocationARB(shaderProgram.program, "tex");
+	glUniform1iARB(location, GL_TEXTURE0_ARB); //handler or unit?
 
-	glShaderSource(vertexShader,   1, &vv, NULL);
-	glShaderSource(fragmentShader, 1, &ff, NULL);
-
-	free(vertexShaderSource);
-	free(fragmentShaderSource);
-
-	glCompileShader(vertexShader);
-	glCompileShader(fragmentShader);
-
-	program = glCreateProgram();
-	glAttachShader(program, vertexShader);
-	glAttachShader(program, fragmentShader);
-
-	glLinkProgram(program); //Links the shader program to OpenGL
-
-	glUseProgram(program); //Uses the OpenGL Program
+	//--- Starts the program
+	shaderProgram.run();
 }
 
 //-----------------------------------------------------------------------------------------
 //
 //	An entry point function for all OpenGL drawing. Called at onDisplay.
 //
-float lpos[4] = {1,0.5,1,0};
-float a = 0.0;
+double a = 0;
 void openGLDrawScene() 
 {	
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glLoadIdentity();
-	gluLookAt(0.0,0.0,5.0, 
-		      0.0,0.0,-1.0,
-			  0.0f,1.0f,0.0f);
-
-	glRotatef(a,0,1,1);
-	glutSolidTeapot(1.0);
-	a+=0.1;
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 	
+	glBindTexture(GL_TEXTURE_2D, textureHandler);
 	
+	brightnessLevel = glGetUniformLocationARB(shaderProgram.program, "time");
+					  glUniform1fARB(brightnessLevel, (GLfloat)(a));
+	a += 0.001;
+
+	glBegin(GL_QUADS);
+		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 0.0f);
+		glVertex2d(0.0,0.0);
+
+		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0, 0.0f); // TexCoords are normalized, in range [0,1]
+		glVertex2d(W,0.0);
+
+		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0, 1.0);
+		glVertex2d(W,H);
+		
+		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 1.0);
+		glVertex2d(0.0,H);
+	glEnd();
+
+	//----------------
 	glutSwapBuffers();
 }
 
-void changeSize(int w, int h) {
-
-	// Prevent a divide by zero, when window is too short
-	// (you cant make a window of zero width).
-	if(h == 0)
-		h = 1;
-
-	float ratio = 1.0* w / h;
-
-	// Reset the coordinate system before modifying
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	
-	// Set the viewport to be the entire window
+/*
+changes size of the window
+*/
+void changeSize(int w, int h) 
+{
     glViewport(0, 0, w, h);
-
-	// Set the correct perspective.
-	gluPerspective(45,ratio,1,1000);
-	glMatrixMode(GL_MODELVIEW);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity(); // Sets the GL_PROJECTION mtx to be identity mtx;
+	glOrtho(0.0,w,0.0,h,-1.0,1.0); //Multiplies the GL_PROJECTION mtx (identity) and sets the value to the new ortho mtx.
+	glScaled(1.0,-1.0,1.0); // Scales and inverts the Y axis;
+	glTranslated(0.0,-h,0.0); // 	
 }

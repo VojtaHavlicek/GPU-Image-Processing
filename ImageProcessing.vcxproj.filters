@@ -24,16 +24,27 @@
     <ClCompile Include="src\shaders\ShaderProgram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\shaders\testIPShader\TestIPShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shaders\monoColorTest\MonoColorShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shaders\BrightnessShader\BrightnessShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="images\artwork.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="README" />
-    <None Include="src\shaders\gaussianBlurTest\testGaussianBlurHor.frag" />
-    <None Include="src\shaders\gaussianBlurTest\testGaussianBlurHor.vert" />
     <None Include="src\shaders\monoColorTest\testFragmentShader.frag" />
     <None Include="src\shaders\monoColorTest\testVertexShader.vert" />
+    <None Include="src\artwork.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\shaders\testIPShader\testFragmentShader.frag" />
+    <None Include="src\shaders\testIPShader\testVertexShader.vert" />
+    <None Include="src\shaders\BrightnessShader\BrightnessShader.frag" />
+    <None Include="src\shaders\BrightnessShader\BrightnessShader.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ImageProcessing.h">
@@ -45,5 +56,23 @@
     <ClInclude Include="src\shaders\ShaderProgram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\soil\SOIL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\shaders\testIPShader\TestIPShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\shaders\Shaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\shaders\monoColorTest\MonoColorShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\shaders\BrightnessShader\BrightnessShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="src\soil\SOIL.lib" />
   </ItemGroup>
 </Project>
