@@ -10,5 +10,4 @@ class EdgeDetectionShader :public ShaderProgram
 public :
 	EdgeDetectionShader(void);
 	~EdgeDetectionShader(void);
-	
 };
