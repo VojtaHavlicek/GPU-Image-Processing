@@ -168,8 +168,8 @@ void openGLDrawScene()
 	
 	glBindTexture(GL_TEXTURE_2D, textureHandler);
 	
-	brightnessLevel = glGetUniformLocationARB(shaderProgram.program, "brightness");
-					  glUniform1fARB(brightnessLevel, (GLfloat)((sin(a)+1)/2));
+	brightnessLevel = glGetUniformLocationARB(shaderProgram.program, "time");
+					  glUniform1fARB(brightnessLevel, (GLfloat)(a));
 	a += 0.001;
 
 	glBegin(GL_QUADS);
