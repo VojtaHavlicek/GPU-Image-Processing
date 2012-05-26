@@ -24,13 +24,19 @@
     <ClCompile Include="src\shaders\ShaderProgram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\shaders\testIPShader\TestIPShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\shaders\monoColorTest\MonoColorShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\shaders\BrightnessShader\BrightnessShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shaders\ShakeShader\ShakeShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shaders\EdgeDetectionShader\EdgeDetectionShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shaders\EdgeDetectionShader20\EdgeDetectionShader20.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shaders\SimpleMotionBlur\SimpleMotionBlur.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -45,6 +51,17 @@
     <None Include="src\shaders\testIPShader\testVertexShader.vert" />
     <None Include="src\shaders\BrightnessShader\BrightnessShader.frag" />
     <None Include="src\shaders\BrightnessShader\BrightnessShader.vert" />
+    <None Include="src\shaders\ShakeShader\ShakeShader.frag" />
+    <None Include="src\shaders\ShakeShader\ShakeShader.vert" />
+    <None Include="src\shaders\EdgeDetectionShader\EdgeDetectionShader.frag" />
+    <None Include="src\shaders\EdgeDetectionShader\EdgeDetectionShader.vert" />
+    <None Include="src\dan.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\shaders\EdgeDetectionShader20\EdgeDetectionShader20.frag" />
+    <None Include="src\shaders\EdgeDetectionShader20\EdgeDetectionShader20.vert" />
+    <None Include="src\shaders\SimpleMotionBlur\SimpleMotionBlur.vert" />
+    <None Include="src\shaders\SimpleMotionBlur\SimpleMotionBlur.frag" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ImageProcessing.h">
@@ -69,6 +86,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\shaders\BrightnessShader\BrightnessShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\shaders\ShakeShader\ShakeShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\shaders\EdgeDetectionShader\EdgeDetectionShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\shaders\EdgeDetectionShader20\EdgeDetectionShader20.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\shaders\SimpleMotionBlur\SimpleMotionBlur.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

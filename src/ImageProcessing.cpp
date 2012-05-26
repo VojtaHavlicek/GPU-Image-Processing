@@ -118,7 +118,7 @@ ShaderProgram shaderProgram;
 
 void prepareShaders()
 {
-	shaderProgram = EdgeDetectionShader();
+	shaderProgram = SimpleMotionBlur();
 	shaderProgram.prepareProgram();
 }
 
@@ -132,14 +132,13 @@ void prepareTexture()
 	glEnable(GL_TEXTURE_2D);
 	
 	glActiveTextureARB(GL_TEXTURE0);
-	textureHandler = SOIL_load_OGL_texture("src/artwork.png",
+	textureHandler = SOIL_load_OGL_texture("src/dan.png",
 							SOIL_LOAD_AUTO,
 							SOIL_CREATE_NEW_ID,
 							NULL);
 	
-	cout << "textureHandler trace: "<< textureHandler << "\n";
-	
-	
+	if(textureHandler == 0)
+		cout << "WARNING: Texture is not loaded \n";	
 }
 
 /**
