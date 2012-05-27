@@ -87,9 +87,10 @@ int main(int argc, char **argv)
 
 
 	prepareTexture(); // prepares the texture to be displayed.
-	prepareShaders();  //shaders disabled while trying out textures
+	//prepareShaders();  //shaders disabled while trying out textures
 
-	openGLInitScene();
+	//openGLInitScene();
+
 	glutMainLoop(); //starts the main loop of the app.
 
 	
@@ -118,7 +119,7 @@ ShaderProgram shaderProgram;
 
 void prepareShaders()
 {
-	shaderProgram = SimpleMotionBlur();
+	shaderProgram = EdgeDetectionShader20();
 	shaderProgram.prepareProgram();
 }
 
@@ -175,9 +176,18 @@ void openGLDrawScene()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 	
 	glBindTexture(GL_TEXTURE_2D, textureHandler);
-	
+
+	shaderProgram = BrightnessShader();
+	shaderProgram.prepareProgram();
 	brightnessLevel = glGetUniformLocationARB(shaderProgram.program, "time");
-					  glUniform1fARB(brightnessLevel, (GLfloat)(a));
+	glUniform1fARB(brightnessLevel, (GLfloat)(a));
+	openGLInitScene();
+
+	shaderProgram = EdgeDetectionShader();
+	shaderProgram.prepareProgram();
+	openGLInitScene();
+	
+
 	a += 0.001;
 
 	glBegin(GL_QUADS);

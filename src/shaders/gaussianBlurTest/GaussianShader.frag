@@ -60,7 +60,7 @@ void main()
 			*/
 			if(X == 0 && Y == 0)
 			{
-				factor = 100;
+				factor = 20;
 			}
 
 			color += getPixel(X,Y)*factor*(1.0/1064.0);
