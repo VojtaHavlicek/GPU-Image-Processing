@@ -1,9 +1,12 @@
 // Fullscreen mode?
 bool fullscreen = false;
 
-//Dimensions of the window
- int W = 240;
- int H = 240;
+//Dimensions of the initial window and picture
+ unsigned int W = 240;
+ unsigned int H = 240;
+
+ unsigned int windowWidth = W;
+ unsigned int windowHeight = H;
 
 /**
 Functions

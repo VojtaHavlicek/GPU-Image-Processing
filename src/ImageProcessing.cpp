@@ -11,7 +11,6 @@
 // 
 //---------------------------------------------------------------------
 
-#include <Windows.h> //need to include this for ZeroMemory
 #include <GL/glew.h> // header file of GLEW;
 #include <GL/glut.h> // header file of GLUT functions
 #include <iostream>  // input/output stream for debug
@@ -33,16 +32,17 @@ GLuint EmptyTexture(GLuint wi, GLuint he)                           // Create An
 {
     GLuint txtnumber;                       // Texture ID
     unsigned int* data;                     // Stored Data
- 
+	
+	
     // Create Storage Space For Texture Data (128x128x4)
     data = (unsigned int*)new GLuint[((wi * he)* 4 * sizeof(unsigned int))];
-    ZeroMemory(data,((wi * he)* 4 * sizeof(unsigned int)));   // Clear Storage Memory
+    memset(data,0,((wi * he)* 4 * sizeof(unsigned int)));   // Clear Storage Memory osing ZeroMemory
  
     glGenTextures(1, &txtnumber);                   // Create 1 Texture
     glBindTexture(GL_TEXTURE_2D, txtnumber);            // Bind The Texture
     glTexImage2D(GL_TEXTURE_2D, 0, 4, wi, he, 0,
      GL_RGBA, GL_UNSIGNED_BYTE, data);           // Build Texture Using Information In data
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); //are the filters neccesarry??
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
  
     delete [] data;                         // Release data
@@ -99,7 +99,7 @@ int main(int argc, char **argv)
 	cout << "OpenGL version: "<< glGetString(GL_VERSION) << "\n";  // Check for OpenGL version
 	
 	glutDisplayFunc(openGLDrawScene);      
-	glutIdleFunc(openGLDrawScene);
+	//glutIdleFunc(openGLDrawScene);
 	glutKeyboardFunc(onKeyboard);
 	glutReshapeFunc(changeSize);
 	
@@ -249,16 +249,16 @@ void openGLDrawScene()
 
 	glBegin(GL_QUADS);
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 0.0f);
-		glVertex2d(0.0,0.0);
+		glVertex2d((windowWidth-W)/2,(windowHeight-H)/2);
 
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0, 0.0f); // TexCoords are normalized, in range [0,1]
-		glVertex2d(W,0.0);
+		glVertex2d((windowWidth+W)/2,(windowHeight-H)/2);
 
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0, 1.0);
-		glVertex2d(W,H);
+		glVertex2d((windowWidth+W)/2,(windowHeight+H)/2);
 		
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 1.0);
-		glVertex2d(0.0,H);
+		glVertex2d((windowWidth-W)/2,(windowHeight+H)/2);
 	glEnd();
 
 
@@ -279,5 +279,8 @@ void changeSize(int w, int h)
 	glLoadIdentity(); // Sets the GL_PROJECTION mtx to be identity mtx;
 	glOrtho(0.0,w,0.0,h,-1.0,1.0); //Multiplies the GL_PROJECTION mtx (identity) and sets the value to the new ortho mtx.
 	glScaled(1.0,-1.0,1.0); // Scales and inverts the Y axis;
-	glTranslated(0.0,-h,0.0); // 	
+	glTranslated(0.0,-h,0.0); // 
+
+	windowHeight = h;
+	windowWidth = w;
 }

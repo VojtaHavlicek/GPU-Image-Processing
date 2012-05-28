@@ -7,4 +7,4 @@ Header used only for inserting the shaders
 #include "EdgeDetectionShader\EdgeDetectionShader.h"
 #include "EdgeDetectionShader20\EdgeDetectionShader20.h"
 #include "SimpleMotionBlur\SimpleMotionBlur.h"
-#include "gaussianBlurTest\GaussianShader.h"
+#include "GaussianBlurTest\GaussianShader.h"
