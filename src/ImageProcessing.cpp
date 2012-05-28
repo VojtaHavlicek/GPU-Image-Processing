@@ -11,6 +11,7 @@
 // 
 //---------------------------------------------------------------------
 
+#include <Windows.h>
 #include <GL/glew.h> // header file of GLEW;
 #include <GL/glut.h> // header file of GLUT functions
 #include <iostream>  // input/output stream for debug
@@ -25,7 +26,59 @@
 // Uses the standard namespace for io operations
 //
 using namespace std;
+/*
+void setupFBO(){
+	GLuint FramebufferName = 0;
+	glGenFramebuffers(1, &FramebufferName);
+	glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
+	// The texture we're going to render to
+	GLuint renderedTexture;
+	glGenTextures(1, &renderedTexture);
+ 
+	// "Bind" the newly created texture : all future texture functions will modify this texture
+	glBindTexture(GL_TEXTURE_2D, renderedTexture);
+ 
+	// Give an empty image to OpenGL ( the last "0" )
+	glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, 1024, 768, 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
+ 
+	// Poor filtering. Needed !
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	// Set "renderedTexture" as our colour attachement #0
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
+ 
+	// Set the list of draw buffers.
+	GLenum DrawBuffers[2] = {GL_COLOR_ATTACHMENT0};
+	glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+	// Always check that our framebuffer is ok
+	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		cout << "Framebuffers empty";
+}
+*/
 
+
+
+
+GLuint EmptyTexture(GLuint wi, GLuint he)                           // Create An Empty Texture
+{
+    GLuint txtnumber;                       // Texture ID
+    unsigned int* data;                     // Stored Data
+ 
+    // Create Storage Space For Texture Data (128x128x4)
+    data = (unsigned int*)new GLuint[((wi * he)* 4 * sizeof(unsigned int))];
+    ZeroMemory(data,((wi * he)* 4 * sizeof(unsigned int)));   // Clear Storage Memory
+ 
+    glGenTextures(1, &txtnumber);                   // Create 1 Texture
+    glBindTexture(GL_TEXTURE_2D, txtnumber);            // Bind The Texture
+    glTexImage2D(GL_TEXTURE_2D, 0, 4, wi, he, 0,
+     GL_RGBA, GL_UNSIGNED_BYTE, data);           // Build Texture Using Information In data
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+ 
+    delete [] data;                         // Release data
+ 
+    return txtnumber;                       // Return The Texture ID
+}
 
 
 void onKeyboard(unsigned char key, int x, int y)
@@ -54,6 +107,10 @@ void onKeyboard(unsigned char key, int x, int y)
         break;
     }
 }
+
+
+unsigned int myTexture;
+
 int main(int argc, char **argv)
 {
 	
@@ -87,6 +144,7 @@ int main(int argc, char **argv)
 
 
 	prepareTexture(); // prepares the texture to be displayed.
+	myTexture = EmptyTexture(240, 240);
 	//prepareShaders();  //shaders disabled while trying out textures
 
 	//openGLInitScene();
@@ -128,6 +186,7 @@ void prepareShaders()
 Prepares texture for later usage
 */
 GLuint textureHandler;
+
 void prepareTexture()
 {
 	glEnable(GL_TEXTURE_2D);
@@ -170,25 +229,27 @@ void openGLInitScene()
 //
 //	An entry point function for all OpenGL drawing. Called at onDisplay.
 //
-double a = 0;
+GLuint myFBO = 0;
+
 void openGLDrawScene() 
 {	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 	
+
+	
+	cout << myTexture;
+	glGenFramebuffersEXT(1, &myFBO);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, myFBO);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, myTexture, 0);
+
+
 	glBindTexture(GL_TEXTURE_2D, textureHandler);
 
-	shaderProgram = BrightnessShader();
-	shaderProgram.prepareProgram();
-	brightnessLevel = glGetUniformLocationARB(shaderProgram.program, "time");
-	glUniform1fARB(brightnessLevel, (GLfloat)(a));
-	openGLInitScene();
 
-	shaderProgram = EdgeDetectionShader();
+	shaderProgram = GaussianShader();
 	shaderProgram.prepareProgram();
 	openGLInitScene();
-	
 
-	a += 0.001;
 
 	glBegin(GL_QUADS);
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 0.0f);
@@ -203,6 +264,36 @@ void openGLDrawScene()
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 1.0);
 		glVertex2d(0.0,H);
 	glEnd();
+
+
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+	
+
+
+	glBindTexture(GL_TEXTURE_2D, myTexture);
+
+	shaderProgram = EdgeDetectionShader();
+	shaderProgram.prepareProgram();
+	openGLInitScene();
+
+
+	glBegin(GL_QUADS);
+		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 0.0f);
+		glVertex2d(0.0,0.0);
+
+		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0, 0.0f); // TexCoords are normalized, in range [0,1]
+		glVertex2d(W,0.0);
+
+		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0, 1.0);
+		glVertex2d(W,H);
+		
+		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 1.0);
+		glVertex2d(0.0,H);
+	glEnd();
+
+
+
+
 
 	//----------------
 	glutSwapBuffers();

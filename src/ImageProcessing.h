@@ -15,6 +15,7 @@ void prepareShaders();
 void prepareTexture();
 void changeSize(int, int);
 int openGLInit(GLvoid);
+void setupFBO();
 
 /**
 Shader pointers

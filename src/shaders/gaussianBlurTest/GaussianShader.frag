@@ -13,6 +13,8 @@ vec4 getPixel(float dx, float dy)
 	return  texture2D(tex, gl_TexCoord[0].st + vec2(dx/width, dy/height));
 }
 
+
+
 void main()
 {
 
