@@ -36,12 +36,11 @@ GLuint EmptyTexture(GLuint wi, GLuint he)                           // Create An
 	
     // Create Storage Space For Texture Data (128x128x4)
     data = (unsigned int*)new GLuint[((wi * he)* 4 * sizeof(unsigned int))];
-    memset(data,0,((wi * he)* 4 * sizeof(unsigned int)));   // Clear Storage Memory osing ZeroMemory
+    memset(data,0,((wi * he)* 4 * sizeof(unsigned int)));   // Clear Storage Memory using ZeroMemory
  
     glGenTextures(1, &txtnumber);                   // Create 1 Texture
     glBindTexture(GL_TEXTURE_2D, txtnumber);            // Bind The Texture
-    glTexImage2D(GL_TEXTURE_2D, 0, 4, wi, he, 0,
-     GL_RGBA, GL_UNSIGNED_BYTE, data);           // Build Texture Using Information In data
+    glTexImage2D(GL_TEXTURE_2D, 0, 4, wi, he, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);           // Build Texture Using Information In data
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); //are the filters neccesarry??
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
  
@@ -49,8 +48,6 @@ GLuint EmptyTexture(GLuint wi, GLuint he)                           // Create An
  
     return txtnumber;                       // Return The Texture ID
 }
-
-
 void onKeyboard(unsigned char key, int x, int y)
 {
 	key=(key>'A' && key<='Z') ? key+'a'-'A':key; 
@@ -79,8 +76,6 @@ void onKeyboard(unsigned char key, int x, int y)
 }
 
 
-unsigned int myTexture; // this is the texture that the framebuffer object renders to
-
 int main(int argc, char **argv)
 {
 	
@@ -99,7 +94,7 @@ int main(int argc, char **argv)
 	cout << "OpenGL version: "<< glGetString(GL_VERSION) << "\n";  // Check for OpenGL version
 	
 	glutDisplayFunc(openGLDrawScene);      
-	//glutIdleFunc(openGLDrawScene);
+	glutIdleFunc(openGLDrawScene);
 	glutKeyboardFunc(onKeyboard);
 	glutReshapeFunc(changeSize);
 	
@@ -114,8 +109,7 @@ int main(int argc, char **argv)
 
 
 	prepareTexture(); // prepares the texture to be displayed.
-	myTexture = EmptyTexture(240, 240); // creates empty texture, using 240, 240, as don't know how to get width/height vars
-	//prepareShaders();  //shaders called elsewhere
+	prepareShaders();  //shaders called elsewhere -> but must be prepared for calling here ;)
 
 	//openGLInitScene();
 
@@ -143,19 +137,34 @@ Entry point for shader program production
 */
 //--- handlers to shaders
 
-ShaderProgram shaderProgram;
-
+ShaderProgram edgeDetection;
+ShaderProgram gaussianBlur;
+GLuint textureHandler;
+GLuint myTexture; // this is the texture that the framebuffer object renders to
 void prepareShaders()
 {
-	shaderProgram = EdgeDetectionShader20();
-	shaderProgram.prepareProgram();
-} //this isn't used atm
+	edgeDetection = EdgeDetectionShader20();
+	edgeDetection.prepareProgram();
+	edgeDetection.link();
+	edgeDetection.setHeight(H);
+	edgeDetection.setWidth(W);
+	edgeDetection.setTex(textureHandler); //this should be initialy set, although it will be reset further ;)
+
+	gaussianBlur = GaussianShader();
+	gaussianBlur.prepareProgram();
+	gaussianBlur.link();
+	gaussianBlur.setHeight(H);
+	gaussianBlur.setWidth(W);
+	gaussianBlur.setTex(myTexture); //this should be initialy set, although it will be reset further to frameBuffer output.
+	
+
+} //this isn't used atm -> should be, there is a good reason for doing so :)
 
 
 /**
 Prepares texture for later usage
 */
-GLuint textureHandler;
+GLuint myFBO = 0; //framebuffer object handler
 
 void prepareTexture()
 {
@@ -169,59 +178,41 @@ void prepareTexture()
 	
 	if(textureHandler == 0)
 		cout << "WARNING: Texture is not loaded \n";	
-}
 
-/**
-Inits the whole scene. All stuff about setting of uniforms should be done here.
-*/
-GLint location; //Location of Alpha
-GLint width;
-GLint height;
-GLint brightnessLevel;
-
-void openGLInitScene() // is this still a logical name for this function?
-{
-    location = glGetUniformLocationARB(shaderProgram.program, "tex");
-	glUniform1iARB(location, GL_TEXTURE0_ARB); 
-
-	//passes dimension of the image to shader
-	width = glGetUniformLocationARB(shaderProgram.program, "width");
-	glUniform1fARB(width, (float) W);
-
-	height = glGetUniformLocationARB(shaderProgram.program, "height");
-	glUniform1fARB(width, (float) H);
-
-	//--- Starts the program
-	shaderProgram.run();
-}
-
-//-----------------------------------------------------------------------------------------
-//
-//	An entry point function for all OpenGL drawing. Called at onDisplay.
-//
-GLuint myFBO = 0; //framebuffer object handler
-
-void openGLDrawScene() 
-{	
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 	
-
+	/*
+	creates the framebuffer texture;
+	*/
+	myTexture = EmptyTexture(W, H); // creates empty texture, using 240, 240, as don't know how to get width/height vars -> use W/H
 	
 	cout << "Texture to Render to ID: " << myTexture << "\n";
 	glGenFramebuffersEXT(1, &myFBO); 
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, myFBO);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, myTexture, 0); //passes empty texture to framebuffer object
 
+}
 
+//-----------------------------------------------------------------------------------------
+//
+//	An entry point function for all OpenGL drawing. Called at onDisplay.
+//
+
+
+void openGLDrawScene() 
+{	
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
+
+	
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, myFBO);
 	glBindTexture(GL_TEXTURE_2D, textureHandler); //binds picture texture
-
-
-	shaderProgram = GaussianShader(); //select shaderprogram
-	shaderProgram.prepareProgram(); 
-	openGLInitScene(); //runs shaderprogram and binds some uniforms
-
+	
+	//openGLInitScene(); //runs shaderprogram and binds some uniforms
+	gaussianBlur.setTex(textureHandler);
+	gaussianBlur.use();
 
 	glBegin(GL_QUADS);
+		glColor3f(0.0,0.0,0.0);
+
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 0.0f);
 		glVertex2d(0.0,0.0);
 
@@ -235,19 +226,16 @@ void openGLDrawScene()
 		glVertex2d(0.0,H);
 	glEnd();
 
-
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); //unbinds framebuffer object, so now rendering to backbuffer or somewhere
-	
-
-
 	glBindTexture(GL_TEXTURE_2D, myTexture); //binds new texture, now been processed by first shader
 
-	shaderProgram = EdgeDetectionShader(); //selects 2nd shaderprogram
-	shaderProgram.prepareProgram();
-	openGLInitScene(); //runs 2nd shaderprogram and binds some uniforms
-
+	edgeDetection.setTex(myTexture); // sets the processed texture before usage of the program.
+	edgeDetection.use();
+	
 
 	glBegin(GL_QUADS);
+		glColor3f(0.0,0.0,0.0);
+
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 0.0f);
 		glVertex2d((windowWidth-W)/2,(windowHeight-H)/2);
 
@@ -260,10 +248,6 @@ void openGLDrawScene()
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 1.0);
 		glVertex2d((windowWidth-W)/2,(windowHeight+H)/2);
 	glEnd();
-
-
-
-
 
 	//----------------
 	glutSwapBuffers();

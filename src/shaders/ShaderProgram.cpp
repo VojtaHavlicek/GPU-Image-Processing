@@ -16,6 +16,8 @@
 ShaderProgram::ShaderProgram(void)
 {
 	programPrepared = false; // if constructed, set programPrepared to false;
+	programRunning  = false;
+	programLinked = false;
 }
 
 ShaderProgram::~ShaderProgram(void)
@@ -87,21 +89,90 @@ void ShaderProgram::prepareProgram()
 		glAttachShader(program, fragmentShader);							  // attaches the shader to the program
 	}
 
+	/**
+	Binds everything needed
+	*/
+	
+	width  = glGetUniformLocationARB(program, "width");
+	height = glGetUniformLocationARB(program, "height");
+	time   = glGetUniformLocationARB(program, "time");
+	tex    = glGetUniformLocationARB(program, "tex");
 	programPrepared = true;
 }
 
-/**
-If program is prepared, runs the shader program
-*/
-
-int ShaderProgram::run()
+int ShaderProgram::use()
 {
 	if(programPrepared)
 	{
+		glUseProgram(program); // run
+		return 1;
+	}
+	return 0;
+}
+
+int ShaderProgram::link()
+{
+	if(programPrepared){
+		glLinkProgram(program);
+		programLinked = true;
+		return 1;
+	}
+	return 0;
+}
+/**
+If program is prepared, runs the shader program
+*/
+int ShaderProgram::run()
+{
+	if(programPrepared){
 		glLinkProgram(program); //link 
 		glUseProgram(program); // run
+		programRunning = true;
 		return 1;
 	}
 
 	return 0;
+}
+
+/**
+seters for common uniforms;
+*/
+using std::cout;
+
+void ShaderProgram::setWidth(GLfloat W)
+{
+	if(width != -1)
+		glUniform1fARB(width, W);
+	else
+		cout<<"WARNING: width uniform is not defined in target shader!\n";
+}
+	
+void ShaderProgram::setHeight(GLfloat H)
+{
+	if(height != -1)
+		glUniform1fARB(height, H);
+	else
+		cout<<"WARNING: height uniform is not defined in target shader!\n";
+}
+
+void ShaderProgram::setTex(GLint handler)
+{
+	if(tex != -1)
+		glUniform1iARB(tex, GL_TEXTURE0_ARB); 
+	else
+	{ 
+		tex    = glGetUniformLocationARB(program, "tex");
+		if(tex == -1)
+			cout << "PRIORITY WARNING: tex uniform is not defined in target shader!\n";
+		else
+			glUniform1iARB(tex, GL_TEXTURE0_ARB); 
+	}
+}
+
+void ShaderProgram::setTime(GLfloat value)
+{
+	if(time != -1)
+		glUniform1fARB(time, value);
+	else
+		cout<<"PRIORITY WARNING: time uniform is not defined in target shader!\n";
 }
