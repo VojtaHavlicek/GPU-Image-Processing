@@ -11,7 +11,7 @@
 // 
 //---------------------------------------------------------------------
 
-#include <Windows.h>
+#include <Windows.h> //need to include this for ZeroMemory
 #include <GL/glew.h> // header file of GLEW;
 #include <GL/glut.h> // header file of GLUT functions
 #include <iostream>  // input/output stream for debug
@@ -26,40 +26,10 @@
 // Uses the standard namespace for io operations
 //
 using namespace std;
-/*
-void setupFBO(){
-	GLuint FramebufferName = 0;
-	glGenFramebuffers(1, &FramebufferName);
-	glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
-	// The texture we're going to render to
-	GLuint renderedTexture;
-	glGenTextures(1, &renderedTexture);
- 
-	// "Bind" the newly created texture : all future texture functions will modify this texture
-	glBindTexture(GL_TEXTURE_2D, renderedTexture);
- 
-	// Give an empty image to OpenGL ( the last "0" )
-	glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, 1024, 768, 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
- 
-	// Poor filtering. Needed !
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	// Set "renderedTexture" as our colour attachement #0
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
- 
-	// Set the list of draw buffers.
-	GLenum DrawBuffers[2] = {GL_COLOR_ATTACHMENT0};
-	glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
-	// Always check that our framebuffer is ok
-	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		cout << "Framebuffers empty";
-}
-*/
 
 
 
-
-GLuint EmptyTexture(GLuint wi, GLuint he)                           // Create An Empty Texture
+GLuint EmptyTexture(GLuint wi, GLuint he)                           // Create An Empty Texture. This is stolen from a NeHe tutorial.
 {
     GLuint txtnumber;                       // Texture ID
     unsigned int* data;                     // Stored Data
@@ -109,7 +79,7 @@ void onKeyboard(unsigned char key, int x, int y)
 }
 
 
-unsigned int myTexture;
+unsigned int myTexture; // this is the texture that the framebuffer object renders to
 
 int main(int argc, char **argv)
 {
@@ -144,8 +114,8 @@ int main(int argc, char **argv)
 
 
 	prepareTexture(); // prepares the texture to be displayed.
-	myTexture = EmptyTexture(240, 240);
-	//prepareShaders();  //shaders disabled while trying out textures
+	myTexture = EmptyTexture(240, 240); // creates empty texture, using 240, 240, as don't know how to get width/height vars
+	//prepareShaders();  //shaders called elsewhere
 
 	//openGLInitScene();
 
@@ -165,7 +135,7 @@ Check if it does not collide with GLUT initialization.
 int openGLInit(GLvoid)
 {	
 	return 0;
-}
+} //this isn't used
 
 
 /**
@@ -179,7 +149,7 @@ void prepareShaders()
 {
 	shaderProgram = EdgeDetectionShader20();
 	shaderProgram.prepareProgram();
-}
+} //this isn't used atm
 
 
 /**
@@ -195,7 +165,7 @@ void prepareTexture()
 	textureHandler = SOIL_load_OGL_texture("src/dan.png",
 							SOIL_LOAD_AUTO,
 							SOIL_CREATE_NEW_ID,
-							NULL);
+							SOIL_FLAG_INVERT_Y);   //added this because image was getting inverted beforehand - probably not the best solution to problem
 	
 	if(textureHandler == 0)
 		cout << "WARNING: Texture is not loaded \n";	
@@ -209,7 +179,7 @@ GLint width;
 GLint height;
 GLint brightnessLevel;
 
-void openGLInitScene()
+void openGLInitScene() // is this still a logical name for this function?
 {
     location = glGetUniformLocationARB(shaderProgram.program, "tex");
 	glUniform1iARB(location, GL_TEXTURE0_ARB); 
@@ -229,7 +199,7 @@ void openGLInitScene()
 //
 //	An entry point function for all OpenGL drawing. Called at onDisplay.
 //
-GLuint myFBO = 0;
+GLuint myFBO = 0; //framebuffer object handler
 
 void openGLDrawScene() 
 {	
@@ -237,18 +207,18 @@ void openGLDrawScene()
 	
 
 	
-	cout << myTexture;
-	glGenFramebuffersEXT(1, &myFBO);
+	cout << "Texture to Render to ID: " << myTexture << "\n";
+	glGenFramebuffersEXT(1, &myFBO); 
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, myFBO);
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, myTexture, 0);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, myTexture, 0); //passes empty texture to framebuffer object
 
 
-	glBindTexture(GL_TEXTURE_2D, textureHandler);
+	glBindTexture(GL_TEXTURE_2D, textureHandler); //binds picture texture
 
 
-	shaderProgram = GaussianShader();
-	shaderProgram.prepareProgram();
-	openGLInitScene();
+	shaderProgram = GaussianShader(); //select shaderprogram
+	shaderProgram.prepareProgram(); 
+	openGLInitScene(); //runs shaderprogram and binds some uniforms
 
 
 	glBegin(GL_QUADS);
@@ -266,15 +236,15 @@ void openGLDrawScene()
 	glEnd();
 
 
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); //unbinds framebuffer object, so now rendering to backbuffer or somewhere
 	
 
 
-	glBindTexture(GL_TEXTURE_2D, myTexture);
+	glBindTexture(GL_TEXTURE_2D, myTexture); //binds new texture, now been processed by first shader
 
-	shaderProgram = EdgeDetectionShader();
+	shaderProgram = EdgeDetectionShader(); //selects 2nd shaderprogram
 	shaderProgram.prepareProgram();
-	openGLInitScene();
+	openGLInitScene(); //runs 2nd shaderprogram and binds some uniforms
 
 
 	glBegin(GL_QUADS);
