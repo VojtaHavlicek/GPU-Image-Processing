@@ -24,7 +24,7 @@ void main()
 	vec4  color = vec4(0.0,0.0,0.0,0.0);
 	float factor = 1.0;
 	
-	float tempLen = 10*(0.5*(sin(time) + 1));
+	float tempLen = 50*(0.5*(sin(time) + 1));
 	int len = int (tempLen)+1;
 
 	for(int i = 0; i < len; i++)

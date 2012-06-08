@@ -2,13 +2,14 @@
 bool fullscreen = false;
 
 //Dimensions of the window
- int W = 240;
+ int W = 320;
  int H = 240;
 
 /**
 Functions
 */
 //Function identifiers
+bool setupCamera();
 void openGLDrawScene();
 void openGLInitScene();
 void prepareShaders();

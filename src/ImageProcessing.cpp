@@ -8,9 +8,12 @@
 //
 // The original code for GLUT initialization was adapted from 
 // Pavel Tisnovsky's tutorial at Root.cz
+//
+// ESCAPI library was made by Jari Komppa. Please visit http://sol.gfxile.net/escapi/index.html
+// for more information.
 // 
 //---------------------------------------------------------------------
-
+#include "escapi/escapi.h"
 #include <GL/glew.h> // header file of GLEW;
 #include <GL/glut.h> // header file of GLUT functions
 #include <iostream>  // input/output stream for debug
@@ -24,12 +27,11 @@
 //
 // Uses the standard namespace for io operations
 //
-using namespace std;
 
-
+//using namespace std;
 
 void onKeyboard(unsigned char key, int x, int y)
-{
+{	
 	key=(key>'A' && key<='Z') ? key+'a'-'A':key; 
     switch (key) {
 		
@@ -54,11 +56,15 @@ void onKeyboard(unsigned char key, int x, int y)
         break;
     }
 }
+
+struct SimpleCapParams capture;
+
 int main(int argc, char **argv)
 {
 	
 	
-	cout << "Image Processing Using GPU \n\nCreated by Vojtech Havlicek & Daniel Greening (2012)\nSupervised by Lionel Fachkamps\nImperial College\n---\nOutput:\n";
+
+	std::cout << "Image Processing Using GPU \n\nCreated by Vojtech Havlicek & Daniel Greening (2012)\nSupervised by Lionel Fachkamps\nImperial College\n---\nOutput:\n";
 
 	/**
 	Prepares GLUT
@@ -69,7 +75,7 @@ int main(int argc, char **argv)
 	glutInitWindowPosition(200,200);
     win1 = glutCreateWindow("Image Processing Project");
 	
-	cout << "OpenGL version: "<< glGetString(GL_VERSION) << "\n";  // Check for OpenGL version
+	std::cout << "OpenGL version: "<< glGetString(GL_VERSION) << "\n";  // Check for OpenGL version
 	
 	glutDisplayFunc(openGLDrawScene);      
 	glutIdleFunc(openGLDrawScene);
@@ -81,13 +87,13 @@ int main(int argc, char **argv)
 	glewInit();
 
 	if(GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader)
-		cout << "ARB extensions supported" << "\n";
+		std::cout << "ARB extensions supported" << "\n";
 	
 
 
-
+	setupCamera();
 	prepareTexture(); // prepares the texture to be displayed.
-	prepareShaders();  //shaders disabled while trying out textures
+	//prepareShaders();  //shaders disabled while trying out textures
 
 	openGLInitScene();
 	glutMainLoop(); //starts the main loop of the app.
@@ -118,7 +124,7 @@ ShaderProgram shaderProgram;
 
 void prepareShaders()
 {
-	shaderProgram = SimpleMotionBlur();
+	shaderProgram = ShakeShader();
 	shaderProgram.prepareProgram();
 }
 
@@ -126,19 +132,29 @@ void prepareShaders()
 /**
 Prepares texture for later usage
 */
-GLuint textureHandler;
+GLuint textureHandler = 0;
 void prepareTexture()
 {
 	glEnable(GL_TEXTURE_2D);
+
+	glActiveTextureARB(GL_TEXTURE0_ARB);
+	glGenTextures(1,&textureHandler);  
+	glBindTexture(GL_TEXTURE_2D, textureHandler);
+
+	glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,320,240,0,GL_RGBA,GL_UNSIGNED_BYTE,(GLvoid*)capture.mTargetBuf);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // Linear Filtering
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // Linear Filtering
 	
-	glActiveTextureARB(GL_TEXTURE0);
-	textureHandler = SOIL_load_OGL_texture("src/dan.png",
+	/*textureHandler = SOIL_load_OGL_texture("src/artwork.png",
 							SOIL_LOAD_AUTO,
 							SOIL_CREATE_NEW_ID,
-							NULL);
-	
+							NULL);*/
+
+	//std::cout << "texture handler " << textureHandler << "capture data: "<<capture.mHeight<<" "<<capture.mTargetBuf[0];
 	if(textureHandler == 0)
-		cout << "WARNING: Texture is not loaded \n";	
+		std::cout << "WARNING: Texture is not loaded \n";	
 }
 
 /**
@@ -173,23 +189,26 @@ double a = 0;
 void openGLDrawScene() 
 {	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
-	
-	glBindTexture(GL_TEXTURE_2D, textureHandler);
+	glBindTexture(GL_TEXTURE_2D, textureHandler); 
 	
 	brightnessLevel = glGetUniformLocationARB(shaderProgram.program, "time");
 					  glUniform1fARB(brightnessLevel, (GLfloat)(a));
 	a += 0.001;
 
 	glBegin(GL_QUADS);
+		//glTexCoord2f(0.0,0.0);
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 0.0f);
 		glVertex2d(0.0,0.0);
 
+		//glTexCoord2f(1.0,0.0);
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0, 0.0f); // TexCoords are normalized, in range [0,1]
 		glVertex2d(W,0.0);
 
+		//glTexCoord2f(1.0,1.0);
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0, 1.0);
 		glVertex2d(W,H);
 		
+		//glTexCoord2f(0.0,1.0);
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 1.0);
 		glVertex2d(0.0,H);
 	glEnd();
@@ -209,4 +228,64 @@ void changeSize(int w, int h)
 	glOrtho(0.0,w,0.0,h,-1.0,1.0); //Multiplies the GL_PROJECTION mtx (identity) and sets the value to the new ortho mtx.
 	glScaled(1.0,-1.0,1.0); // Scales and inverts the Y axis;
 	glTranslated(0.0,-h,0.0); // 	
+}
+
+/**
+sets up the camera
+*/
+bool setupCamera()
+{
+	int devices = setupESCAPI();
+
+	if(devices == 0){
+		std::cout << "some problems with devices";
+		return false;
+	}
+	/* Set up capture parameters.
+   * ESCAPI will scale the data received from the camera 
+   * (with point sampling) to whatever values you want. 
+   * Typically the native resolution is 320*240.
+   */
+
+    
+    capture.mWidth = 320;
+    capture.mHeight = 240;
+    capture.mTargetBuf = new int[320 * 240];
+
+	/* Initialize capture - only one capture may be active per device,
+   * but several devices may be captured at the same time. 
+   *
+   * 0 is the first device.
+   */
+  
+  if (initCapture(0, &capture) == 0)
+  {
+    std::cout << ("Capture failed - device may already be in use.\n");
+    return false;
+  }
+  
+  /* request a capture */      
+  doCapture(0);
+    
+  while (isCaptureDone(0) == 0)
+  {
+    /* Wait until capture is done. */       
+  }
+  
+  for (int i = 0; i < W*H; i++){
+		capture.mTargetBuf[i] = (capture.mTargetBuf[i] & 0xff00ff00) |
+			                    ((capture.mTargetBuf[i] & 0xff) << 16) |
+							    ((capture.mTargetBuf[i] & 0xff0000) >> 16);
+		/*if(i < W)
+			std::cout << capture.mTargetBuf[i] << " ";*/
+  }
+
+  /* now we have the data in capture.mTargetBuf 
+   * If we want another frame, we'll just call doCapture(0) again.
+   * When done, we'll shut down:
+   */
+  
+  deinitCapture(0); 
+
+  return true;
 }
