@@ -72,8 +72,6 @@ int main(int argc, char **argv)
 	openGLInitScene();
 	glutMainLoop(); //starts the main loop of the app.
 
-	
-	
     return 0;             
 }
 
