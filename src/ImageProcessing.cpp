@@ -9,61 +9,34 @@
 // The original code for GLUT initialization was adapted from 
 // Pavel Tisnovsky's tutorial at Root.cz
 //
-// ESCAPI library was made by Jari Komppa. Please visit http://sol.gfxile.net/escapi/index.html
+// ESCAPI library was made by Jari Komppa. Please
+// visit http://sol.gfxile.net/escapi/index.html
 // for more information.
 // 
 //---------------------------------------------------------------------
+
+
 #include "escapi/escapi.h"
-#include <GL/glew.h> // header file of GLEW;
-#include <GL/glut.h> // header file of GLUT functions
-#include <iostream>  // input/output stream for debug
+#include <GL/glew.h>              // header file of GLEW;
+#include <GL/glut.h>              // header file of GLUT functions
+#include <iostream>               // input/output stream for debug
 #include <string>
 #include <cmath>
 #include "textfile/textfile.h"     // includes textfile manipulation utilities
 #include "shaders/Shaders.h"       // includes the ShaderProgram Class
-#include "ImageProcessing.h"       // includes interface for the file (function definitions). Always include as last !!!
 #include "soil/SOIL.h"             // Soil 
+//-------------------------------------------
+#include "ImageProcessing.h"       // includes interface for the file (function definitions). Always include as last !!!
 
-//
-// Uses the standard namespace for io operations
-//
 
-//using namespace std;
-
-void onKeyboard(unsigned char key, int x, int y)
-{	
-	key=(key>'A' && key<='Z') ? key+'a'-'A':key; 
-    switch (key) {
-		
-		//--- EXIT CASES
-        case 'x':                 
-        case 'q':
-        case 27:          
-            exit(0);
-        break;
-        
-		//----------------------------------
-		case 'f': 
-			if(!fullscreen){
-				fullscreen = true;
-				glutFullScreen();           
-			}else{
-				glutReshapeWindow(W, H);
-				glutPositionWindow(200, 200);
-				fullscreen = false;
-			}
-
-        break;
-    }
-}
-
+//structure for handling the image data
 struct SimpleCapParams capture;
 
+/*
+Main entry point
+*/
 int main(int argc, char **argv)
 {
-	
-	
-
 	std::cout << "Image Processing Using GPU \n\nCreated by Vojtech Havlicek & Daniel Greening (2012)\nSupervised by Lionel Fachkamps\nImperial College\n---\nOutput:\n";
 
 	/**
@@ -78,7 +51,7 @@ int main(int argc, char **argv)
 	std::cout << "OpenGL version: "<< glGetString(GL_VERSION) << "\n";  // Check for OpenGL version
 	
 	glutDisplayFunc(openGLDrawScene);      
-	glutIdleFunc(openGLDrawScene);
+	glutIdleFunc(openGLIdle);
 	glutKeyboardFunc(onKeyboard);
 	glutReshapeFunc(changeSize);
 	
@@ -93,7 +66,7 @@ int main(int argc, char **argv)
 
 	setupCamera();
 	prepareTexture(); // prepares the texture to be displayed.
-	//prepareShaders();  //shaders disabled while trying out textures
+	prepareShaders();  //shaders disabled while trying out textures
 
 	openGLInitScene();
 	glutMainLoop(); //starts the main loop of the app.
@@ -116,29 +89,18 @@ int openGLInit(GLvoid)
 
 
 /**
-Entry point for shader program production
+Executed on idle state of GLUT window.
 */
-//--- handlers to shaders
-
-ShaderProgram shaderProgram;
-
-void prepareShaders()
+void openGLIdle() 
 {
-	shaderProgram = ShakeShader();
-	shaderProgram.prepareProgram();
+	openGLDrawScene();
+	doSnapshot();
+	rewriteTexData();
+	
 }
 
-
-/**
-Prepares texture for later usage
-*/
-GLuint textureHandler = 0;
-void prepareTexture()
+void rewriteTexData()
 {
-	glEnable(GL_TEXTURE_2D);
-
-	glActiveTextureARB(GL_TEXTURE0_ARB);
-	glGenTextures(1,&textureHandler);  
 	glBindTexture(GL_TEXTURE_2D, textureHandler);
 
 	glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,320,240,0,GL_RGBA,GL_UNSIGNED_BYTE,(GLvoid*)capture.mTargetBuf);
@@ -146,13 +108,32 @@ void prepareTexture()
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // Linear Filtering
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // Linear Filtering
-	
-	/*textureHandler = SOIL_load_OGL_texture("src/artwork.png",
-							SOIL_LOAD_AUTO,
-							SOIL_CREATE_NEW_ID,
-							NULL);*/
+}
+/**
+Entry point for shader program production
+*/
+//--- handlers to shaders
 
-	//std::cout << "texture handler " << textureHandler << "capture data: "<<capture.mHeight<<" "<<capture.mTargetBuf[0];
+ShaderProgram shaderProgram;
+void prepareShaders()
+{
+	shaderProgram = TestIPShader();//ShakeShader();
+	shaderProgram.prepareProgram();
+}
+
+
+/**
+Prepares texture for later usage
+*/
+void prepareTexture()
+{
+	glEnable(GL_TEXTURE_2D);
+
+	glActiveTextureARB(GL_TEXTURE0_ARB);
+	glGenTextures(1,&textureHandler);  
+	
+	rewriteTexData();
+	
 	if(textureHandler == 0)
 		std::cout << "WARNING: Texture is not loaded \n";	
 }
@@ -164,7 +145,6 @@ GLint location; //Location of Alpha
 GLint width;
 GLint height;
 GLint brightnessLevel;
-
 void openGLInitScene()
 {
     location = glGetUniformLocationARB(shaderProgram.program, "tex");
@@ -217,18 +197,6 @@ void openGLDrawScene()
 	glutSwapBuffers();
 }
 
-/*
-changes size of the window
-*/
-void changeSize(int w, int h) 
-{
-    glViewport(0, 0, w, h);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity(); // Sets the GL_PROJECTION mtx to be identity mtx;
-	glOrtho(0.0,w,0.0,h,-1.0,1.0); //Multiplies the GL_PROJECTION mtx (identity) and sets the value to the new ortho mtx.
-	glScaled(1.0,-1.0,1.0); // Scales and inverts the Y axis;
-	glTranslated(0.0,-h,0.0); // 	
-}
 
 /**
 sets up the camera
@@ -242,15 +210,15 @@ bool setupCamera()
 		return false;
 	}
 	/* Set up capture parameters.
-   * ESCAPI will scale the data received from the camera 
-   * (with point sampling) to whatever values you want. 
-   * Typically the native resolution is 320*240.
-   */
+     * ESCAPI will scale the data received from the camera 
+     * (with point sampling) to whatever values you want. 
+     * Typically the native resolution is 320*240.
+     */
 
     
-    capture.mWidth = 320;
-    capture.mHeight = 240;
-    capture.mTargetBuf = new int[320 * 240];
+    capture.mWidth  = W;
+    capture.mHeight = H;
+    capture.mTargetBuf = new int[W * H];
 
 	/* Initialize capture - only one capture may be active per device,
    * but several devices may be captured at the same time. 
@@ -262,30 +230,74 @@ bool setupCamera()
   {
     std::cout << ("Capture failed - device may already be in use.\n");
     return false;
-  }
-  
-  /* request a capture */      
+  } 
+
+  doSnapshot();
+
+  return true;
+}
+void shutDownCamera()
+{  
+  deinitCapture(0); 
+}
+
+/*
+Does a snapshot using the camera
+*/ 
+void doSnapshot()
+{  
   doCapture(0);
     
   while (isCaptureDone(0) == 0)
-  {
-    /* Wait until capture is done. */       
+  {       
   }
   
   for (int i = 0; i < W*H; i++){
 		capture.mTargetBuf[i] = (capture.mTargetBuf[i] & 0xff00ff00) |
 			                    ((capture.mTargetBuf[i] & 0xff) << 16) |
 							    ((capture.mTargetBuf[i] & 0xff0000) >> 16);
-		/*if(i < W)
-			std::cout << capture.mTargetBuf[i] << " ";*/
   }
+}
 
-  /* now we have the data in capture.mTargetBuf 
-   * If we want another frame, we'll just call doCapture(0) again.
-   * When done, we'll shut down:
-   */
-  
-  deinitCapture(0); 
+/**
+keyboard utility
+*/
+void onKeyboard(unsigned char key, int x, int y)
+{	
+	key=(key>'A' && key<='Z') ? key+'a'-'A':key; 
+    switch (key) {
+		
+		//--- EXIT CASES
+        case 'x':                 
+        case 'q':
+        case 27:          
+            exit(0);
+        break;
+        
+		//----------------------------------
+		case 'f': 
+			if(!fullscreen){
+				fullscreen = true;
+				glutFullScreen();           
+			}else{
+				glutReshapeWindow(W, H);
+				glutPositionWindow(200, 200);
+				fullscreen = false;
+			}
 
-  return true;
+        break;
+    }
+}
+
+/*
+changes size of the window
+*/
+void changeSize(int w, int h) 
+{
+    glViewport(0, 0, w, h);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity(); // Sets the GL_PROJECTION mtx to be identity mtx;
+	glOrtho(0.0,w,0.0,h,-1.0,1.0); //Multiplies the GL_PROJECTION mtx (identity) and sets the value to the new ortho mtx.
+	glScaled(-1.0,-1.0,1.0); // Scales and inverts the Y axis and X axis too (to have a mirror effect);
+	glTranslated(-w,-h,0.0); // 	
 }

@@ -9,21 +9,34 @@ bool fullscreen = false;
 Functions
 */
 //Function identifiers
-bool setupCamera();
-void openGLDrawScene();
-void openGLInitScene();
+ //init functions
 void prepareShaders();
 void prepareTexture();
+
+//camera functions
+bool setupCamera();
+void doSnapshot();
+void shutDownCamera();
+void rewriteTexData();
+
+//openGL functions
+void openGLIdle();
+void openGLDrawScene();
+void openGLInitScene();
+
+//callbacks
 void changeSize(int, int);
-int openGLInit(GLvoid);
+void onKeyboard(unsigned char, int, int);
+int  openGLInit(GLvoid);
 
 /**
 Shader pointers
 */
-
+GLuint textureHandler = 0;
 GLuint vertexShader;
 GLuint fragmentShader;
 GLuint program;
+
 
 
 // Pointers to application window
