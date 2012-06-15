@@ -117,7 +117,7 @@ Entry point for shader program production
 ShaderProgram shaderProgram;
 void prepareShaders()
 {
-	shaderProgram = TestIPShader();//ShakeShader();
+	shaderProgram = EdgeDetectionShader20();//ShakeShader();
 	shaderProgram.prepareProgram();
 }
 
@@ -141,6 +141,7 @@ void prepareTexture()
 /**
 Inits the whole scene. All stuff about setting of uniforms should be done here.
 */
+
 GLint location; //Location of Alpha
 GLint width;
 GLint height;
@@ -175,22 +176,21 @@ void openGLDrawScene()
 					  glUniform1fARB(brightnessLevel, (GLfloat)(a));
 	a += 0.001;
 
+
 	glBegin(GL_QUADS);
-		//glTexCoord2f(0.0,0.0);
+		glColor3f(0.0,0.0,0.0);
+
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 0.0f);
-		glVertex2d(0.0,0.0);
+		glVertex2d(ratio*(windowWidth-W)/2,ratio*(windowHeight-H)/2);
 
-		//glTexCoord2f(1.0,0.0);
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0, 0.0f); // TexCoords are normalized, in range [0,1]
-		glVertex2d(W,0.0);
+		glVertex2d(ratio*(windowWidth+W)/2,ratio*(windowHeight-H)/2);
 
-		//glTexCoord2f(1.0,1.0);
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0, 1.0);
-		glVertex2d(W,H);
-		
-		//glTexCoord2f(0.0,1.0);
+		glVertex2d(ratio*(windowWidth+W)/2,ratio*(windowHeight+H)/2);
+
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 1.0);
-		glVertex2d(0.0,H);
+		glVertex2d(ratio*(windowWidth-W)/2,ratio*(windowHeight+H)/2);
 	glEnd();
 
 	//----------------
@@ -262,6 +262,7 @@ void doSnapshot()
 /**
 keyboard utility
 */
+double ratio = 1;
 void onKeyboard(unsigned char key, int x, int y)
 {	
 	key=(key>'A' && key<='Z') ? key+'a'-'A':key; 
@@ -286,6 +287,13 @@ void onKeyboard(unsigned char key, int x, int y)
 			}
 
         break;
+		//----------------------------------
+		case 'd':
+			if(ratio == 1)
+				ratio = 2;
+			else
+				ratio = 1;
+		break;
     }
 }
 
@@ -300,4 +308,7 @@ void changeSize(int w, int h)
 	glOrtho(0.0,w,0.0,h,-1.0,1.0); //Multiplies the GL_PROJECTION mtx (identity) and sets the value to the new ortho mtx.
 	glScaled(-1.0,-1.0,1.0); // Scales and inverts the Y axis and X axis too (to have a mirror effect);
 	glTranslated(-w,-h,0.0); // 	
+
+	windowHeight = h;
+	windowWidth = w;
 }

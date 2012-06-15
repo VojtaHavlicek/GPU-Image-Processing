@@ -5,6 +5,8 @@ bool fullscreen = false;
  int W = 320;
  int H = 240;
 
+ int windowHeight = H;
+ int windowWidth = W;
 /**
 Functions
 */
