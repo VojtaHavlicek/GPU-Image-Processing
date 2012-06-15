@@ -25,6 +25,7 @@
 #include "textfile/textfile.h"     // includes textfile manipulation utilities
 #include "shaders/Shaders.h"       // includes the ShaderProgram Class
 #include "soil/SOIL.h"             // Soil 
+#include <time.h>                  // clock
 //-------------------------------------------
 #include "ImageProcessing.h"       // includes interface for the file (function definitions). Always include as last !!!
 
@@ -91,11 +92,34 @@ int openGLInit(GLvoid)
 /**
 Executed on idle state of GLUT window.
 */
+clock_t last;
+clock_t now;
+double diffClock = 1.0;
 void openGLIdle() 
 {
+	/**
+	measure time elapsed
+	*/
+	now = clock();
+	if(last != NULL)
+		diffClock = 1000*(last - now)/CLOCKS_PER_SEC;
+	last = clock();
+	
+
 	openGLDrawScene();
-	doSnapshot();
+	if(isCaptureDone(0) != 0)
+	{
+		for (int i = 0; i < W*H; i++){
+			capture.mTargetBuf[i] = (capture.mTargetBuf[i] & 0xff00ff00) |
+									((capture.mTargetBuf[i] & 0xff) << 16) |
+									((capture.mTargetBuf[i] & 0xff0000) >> 16);
+		}
+		
+		doCapture(0);
+	}
 	rewriteTexData();
+
+	
 	
 }
 
@@ -117,7 +141,7 @@ Entry point for shader program production
 ShaderProgram shaderProgram;
 void prepareShaders()
 {
-	shaderProgram = EdgeDetectionShader20();//ShakeShader();
+	shaderProgram = EdgeDetectionShader();//ShakeShader();
 	shaderProgram.prepareProgram();
 }
 
@@ -145,7 +169,7 @@ Inits the whole scene. All stuff about setting of uniforms should be done here.
 GLint location; //Location of Alpha
 GLint width;
 GLint height;
-GLint brightnessLevel;
+GLint timeUniform;
 void openGLInitScene()
 {
     location = glGetUniformLocationARB(shaderProgram.program, "tex");
@@ -166,31 +190,32 @@ void openGLInitScene()
 //
 //	An entry point function for all OpenGL drawing. Called at onDisplay.
 //
+double ratio = 1;
 double a = 0;
 void openGLDrawScene() 
 {	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 	glBindTexture(GL_TEXTURE_2D, textureHandler); 
 	
-	brightnessLevel = glGetUniformLocationARB(shaderProgram.program, "time");
-					  glUniform1fARB(brightnessLevel, (GLfloat)(a));
-	a += 0.001;
-
+	timeUniform = glGetUniformLocationARB(shaderProgram.program, "time");
+			    glUniform1fARB(timeUniform, (GLfloat)(a));
+				
+	a += 0.001*diffClock;
 
 	glBegin(GL_QUADS);
 		glColor3f(0.0,0.0,0.0);
 
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 0.0f);
-		glVertex2d(ratio*(windowWidth-W)/2,ratio*(windowHeight-H)/2);
+		glVertex2d((windowWidth-ratio*W)/2,(windowHeight-ratio*H)/2);
 
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0, 0.0f); // TexCoords are normalized, in range [0,1]
-		glVertex2d(ratio*(windowWidth+W)/2,ratio*(windowHeight-H)/2);
+		glVertex2d((windowWidth+ratio*W)/2,(windowHeight-ratio*H)/2);
 
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0, 1.0);
-		glVertex2d(ratio*(windowWidth+W)/2,ratio*(windowHeight+H)/2);
+		glVertex2d((windowWidth+ratio*W)/2,(windowHeight+ratio*H)/2);
 
 		glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 1.0);
-		glVertex2d(ratio*(windowWidth-W)/2,ratio*(windowHeight+H)/2);
+		glVertex2d((windowWidth-ratio*W)/2,(windowHeight+ratio*H)/2);
 	glEnd();
 
 	//----------------
@@ -262,7 +287,7 @@ void doSnapshot()
 /**
 keyboard utility
 */
-double ratio = 1;
+
 void onKeyboard(unsigned char key, int x, int y)
 {	
 	key=(key>'A' && key<='Z') ? key+'a'-'A':key; 
