@@ -55,7 +55,6 @@ int main(int argc, char **argv)
 	glutIdleFunc(openGLIdle);
 	glutKeyboardFunc(onKeyboard);
 	glutReshapeFunc(changeSize);
-	
 	glClearColor(0.0,0.0,0.0,1.0);
 	
 	glewInit();
@@ -71,7 +70,7 @@ int main(int argc, char **argv)
 
 	openGLInitScene();
 	glutMainLoop(); //starts the main loop of the app.
-
+	shutDownCamera(); // <--- check this
     return 0;             
 }
 
@@ -139,7 +138,7 @@ Entry point for shader program production
 ShaderProgram shaderProgram;
 void prepareShaders()
 {
-	shaderProgram = EdgeDetectionShader();//ShakeShader();
+	shaderProgram = EdgeDetectionShader40();//ShakeShader();
 	shaderProgram.prepareProgram();
 }
 
@@ -229,7 +228,8 @@ bool setupCamera()
 	int devices = setupESCAPI();
 
 	if(devices == 0){
-		std::cout << "some problems with devices";
+		std::cout << "some problems with devices\n";
+		std::exit(1);
 		return false;
 	}
 	/* Set up capture parameters.

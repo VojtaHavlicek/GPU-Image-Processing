@@ -8,3 +8,4 @@ Header used only for inserting the shaders
 #include "EdgeDetectionShader20\EdgeDetectionShader20.h"
 #include "SimpleMotionBlur\SimpleMotionBlur.h"
 #include "testIPShader\TestIPShader.h"
+#include "EdgeDetectionShader40\EdgeDetectionShader40.h"
