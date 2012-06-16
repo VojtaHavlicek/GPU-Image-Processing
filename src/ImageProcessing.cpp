@@ -40,6 +40,7 @@ int main(int argc, char **argv)
 {
 	std::cout << "Image Processing Using GPU \n\nCreated by Vojtech Havlicek & Daniel Greening (2012)\nSupervised by Lionel Fachkamps\nImperial College\n---\nOutput:\n";
 
+	setupCamera();
 	/**
 	Prepares GLUT
 	*/
@@ -64,7 +65,7 @@ int main(int argc, char **argv)
 	
 
 
-	setupCamera();
+	
 	prepareTexture(); // prepares the texture to be displayed.
 	prepareShaders();  //shaders disabled while trying out textures
 
@@ -228,7 +229,8 @@ bool setupCamera()
 	int devices = setupESCAPI();
 
 	if(devices == 0){
-		std::cout << "some problems with devices\n";
+		std::cout << "FATAL ERROR: some problems with devices. No device found\n";
+		std::cin.get();
 		std::exit(1);
 		return false;
 	}
@@ -249,11 +251,11 @@ bool setupCamera()
    * 0 is the first device.
    */
   
-  if (initCapture(0, &capture) == 0)
-  {
-    std::cout << ("Capture failed - device may already be in use.\n");
-    return false;
-  } 
+    if (initCapture(0, &capture) == 0)
+    {
+       std::cout << ("Capture failed - device may already be in use.\n");
+       return false;
+    } 
 
   doSnapshot();
 
