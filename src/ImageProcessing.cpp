@@ -14,8 +14,7 @@
 // for more information.
 // 
 //---------------------------------------------------------------------
-
-
+#include <cv.h>
 #include "escapi/escapi.h"
 #include <GL/glew.h>              // header file of GLEW;
 #include <GL/glut.h>              // header file of GLUT functions
@@ -39,7 +38,7 @@ Main entry point
 int main(int argc, char **argv)
 {
 	std::cout << "Image Processing Using GPU \n\nCreated by Vojtech Havlicek & Daniel Greening (2012)\nSupervised by Lionel Fachkamps\nImperial College\n---\nOutput:\n";
-
+	cv::Mat testMtx;
 	setupCamera();
 	/**
 	Prepares GLUT

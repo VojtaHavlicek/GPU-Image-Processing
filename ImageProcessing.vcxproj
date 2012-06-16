@@ -31,6 +31,7 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="configOpenCV.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -61,6 +62,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\escapi\escapi.cpp" />
+    <ClCompile Include="src\shaders\EdgeDetectionShader40\EdgeDetectionShader40.cpp" />
     <ClCompile Include="src\shaders\SimpleMotionBlur\SimpleMotionBlur.cpp" />
     <ClCompile Include="src\shaders\EdgeDetectionShader20\EdgeDetectionShader20.cpp" />
     <ClCompile Include="src\shaders\BrightnessShader\BrightnessShader.cpp" />
@@ -68,12 +71,20 @@
     <ClCompile Include="src\shaders\ShaderProgram.cpp" />
     <ClCompile Include="src\ImageProcessing.cpp" />
     <ClCompile Include="src\shaders\ShakeShader\ShakeShader.cpp" />
+    <ClCompile Include="src\shaders\testIPShader\TestIPShader.cpp" />
     <ClCompile Include="src\textfile\textfile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="libs\opencv\build\x86\vc10\bin\opencv_highgui240.dll" />
     <None Include="README" />
     <None Include="src\artwork.png" />
     <None Include="src\dan.png" />
+    <None Include="src\escapi\escapi.dll" />
+    <None Include="src\openCV\cv210d.dll" />
+    <None Include="src\openCV\cxcore210d.dll" />
+    <None Include="src\openCV\highgui210d.dll" />
+    <None Include="src\shaders\gaussianBlurTest\GaussianShader.frag" />
+    <None Include="src\shaders\gaussianBlurTest\GaussianShader.vert" />
     <None Include="src\shaders\SimpleMotionBlur\SimpleMotionBlur.frag" />
     <None Include="src\shaders\SimpleMotionBlur\SimpleMotionBlur.vert" />
     <None Include="src\shaders\EdgeDetectionShader20\EdgeDetectionShader20.frag" />
@@ -82,14 +93,26 @@
     <None Include="src\shaders\BrightnessShader\BrightnessShader.vert" />
     <None Include="src\shaders\EdgeDetectionShader\EdgeDetectionShader.vert" />
     <None Include="src\shaders\EdgeDetectionShader\EdgeDetectionShader.frag" />
-    <None Include="src\shaders\monoColorTest\testFragmentShader.frag" />
-    <None Include="src\shaders\monoColorTest\testVertexShader.vert" />
     <None Include="src\shaders\ShakeShader\ShakeShader.frag" />
     <None Include="src\shaders\ShakeShader\ShakeShader.vert" />
     <None Include="src\shaders\testIPShader\testFragmentShader.frag" />
     <None Include="src\shaders\testIPShader\testVertexShader.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="libs\opencv\include\opencv\cv.h" />
+    <ClInclude Include="libs\opencv\include\opencv\cv.hpp" />
+    <ClInclude Include="libs\opencv\include\opencv\cvaux.h" />
+    <ClInclude Include="libs\opencv\include\opencv\cvaux.hpp" />
+    <ClInclude Include="libs\opencv\include\opencv\cvwimage.h" />
+    <ClInclude Include="libs\opencv\include\opencv\cxcore.h" />
+    <ClInclude Include="libs\opencv\include\opencv\cxcore.hpp" />
+    <ClInclude Include="libs\opencv\include\opencv\cxeigen.hpp" />
+    <ClInclude Include="libs\opencv\include\opencv\cxmisc.h" />
+    <ClInclude Include="libs\opencv\include\opencv\highgui.h" />
+    <ClInclude Include="libs\opencv\include\opencv\ml.h" />
+    <ClInclude Include="src\escapi\escapi.h" />
+    <ClInclude Include="src\shaders\EdgeDetectionShader40\EdgeDetectionShader40.h" />
+    <ClInclude Include="src\shaders\gaussianblurtest\gaussianshader.h" />
     <ClInclude Include="src\shaders\SimpleMotionBlur\SimpleMotionBlur.h" />
     <ClInclude Include="src\shaders\EdgeDetectionShader20\EdgeDetectionShader20.h" />
     <ClInclude Include="src\shaders\BrightnessShader\BrightnessShader.h" />
@@ -98,6 +121,7 @@
     <ClInclude Include="src\shaders\Shaders.h" />
     <ClInclude Include="src\shaders\ShakeShader\ShakeShader.h" />
     <ClInclude Include="src\shaders\testIPShader\TestIPShader.h" />
+    <ClInclude Include="src\shaders\TestShader\TestShader.h" />
     <ClInclude Include="src\soil\SOIL.h" />
     <ClInclude Include="src\shaders\ShaderProgram.h" />
     <ClInclude Include="src\ImageProcessing.h" />
