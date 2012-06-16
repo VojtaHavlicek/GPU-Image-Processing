@@ -9,3 +9,4 @@ Header used only for inserting the shaders
 #include "SimpleMotionBlur\SimpleMotionBlur.h"
 #include "testIPShader\TestIPShader.h"
 #include "EdgeDetectionShader40\EdgeDetectionShader40.h"
+#include "SineShader\SineShader.h"

@@ -71,6 +71,7 @@
     <ClCompile Include="src\shaders\ShaderProgram.cpp" />
     <ClCompile Include="src\ImageProcessing.cpp" />
     <ClCompile Include="src\shaders\ShakeShader\ShakeShader.cpp" />
+    <ClCompile Include="src\shaders\SineShader\SineShader.cpp" />
     <ClCompile Include="src\shaders\testIPShader\TestIPShader.cpp" />
     <ClCompile Include="src\textfile\textfile.cpp" />
   </ItemGroup>
@@ -95,6 +96,8 @@
     <None Include="src\shaders\EdgeDetectionShader\EdgeDetectionShader.frag" />
     <None Include="src\shaders\ShakeShader\ShakeShader.frag" />
     <None Include="src\shaders\ShakeShader\ShakeShader.vert" />
+    <None Include="src\shaders\SineShader\SineShader.frag" />
+    <None Include="src\shaders\SineShader\SineShader.vert" />
     <None Include="src\shaders\testIPShader\testFragmentShader.frag" />
     <None Include="src\shaders\testIPShader\testVertexShader.vert" />
   </ItemGroup>
@@ -120,6 +123,7 @@
     <ClInclude Include="src\shaders\monoColorTest\MonoColorShader.h" />
     <ClInclude Include="src\shaders\Shaders.h" />
     <ClInclude Include="src\shaders\ShakeShader\ShakeShader.h" />
+    <ClInclude Include="src\shaders\SineShader\SineShader.h" />
     <ClInclude Include="src\shaders\testIPShader\TestIPShader.h" />
     <ClInclude Include="src\shaders\TestShader\TestShader.h" />
     <ClInclude Include="src\soil\SOIL.h" />

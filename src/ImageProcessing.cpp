@@ -9,13 +9,13 @@
 // The original code for GLUT initialization was adapted from 
 // Pavel Tisnovsky's tutorial at Root.cz
 //
-// ESCAPI library was made by Jari Komppa. Please
-// visit http://sol.gfxile.net/escapi/index.html
-// for more information.
+// OpenCV
+// Copyright (c) , <OWNER>
+// All rights reserved.
 // 
 //---------------------------------------------------------------------
 #include <cv.h>
-#include "escapi/escapi.h"
+#include <highgui.h>
 #include <GL/glew.h>              // header file of GLEW;
 #include <GL/glut.h>              // header file of GLUT functions
 #include <iostream>               // input/output stream for debug
@@ -29,17 +29,13 @@
 #include "ImageProcessing.h"       // includes interface for the file (function definitions). Always include as last !!!
 
 
-//structure for handling the image data
-struct SimpleCapParams capture;
-
 /*
 Main entry point
 */
 int main(int argc, char **argv)
 {
 	std::cout << "Image Processing Using GPU \n\nCreated by Vojtech Havlicek & Daniel Greening (2012)\nSupervised by Lionel Fachkamps\nImperial College\n---\nOutput:\n";
-	cv::Mat testMtx;
-	setupCamera();
+	
 	/**
 	Prepares GLUT
 	*/
@@ -64,16 +60,34 @@ int main(int argc, char **argv)
 	
 
 
-	
+	doSnapshot();
 	prepareTexture(); // prepares the texture to be displayed.
 	prepareShaders();  //shaders disabled while trying out textures
 
 	openGLInitScene();
 	glutMainLoop(); //starts the main loop of the app.
-	shutDownCamera(); // <--- check this
+	
     return 0;             
 }
 
+/*
+Does a snapshot using the camera
+*/ 
+cv::VideoCapture cap(0);
+cv::Mat frame;
+void doSnapshot()
+{  
+  if(cap.isOpened())
+  {
+	 cap >> frame;
+	 if(W != frame.cols || H != frame.rows)
+	 {
+		W = frame.cols;
+		H = frame.rows;
+		glutReshapeWindow(W,H);
+	 }
+  }
+}
 
 /**
 Initialization function for openGL. Setups the OpenGL in the beginning.
@@ -99,24 +113,18 @@ void openGLIdle()
 	*/
 	now = clock();
 	if(last != NULL)
-		diffClock = 1000*(last - now)/CLOCKS_PER_SEC;
-	last = clock();
-	
+		diffClock = 1000*(now - last)/CLOCKS_PER_SEC;
+	last = clock();	
 
 	openGLDrawScene();
-	if(isCaptureDone(0) != 0)
-	{
-		for (int i = 0; i < W*H; i++){
-			capture.mTargetBuf[i] = (capture.mTargetBuf[i] & 0xff00ff00) |
-									((capture.mTargetBuf[i] & 0xff) << 16) |
-									((capture.mTargetBuf[i] & 0xff0000) >> 16);
-		}
-		
-		doCapture(0);
-	}
+	doSnapshot();
 	rewriteTexData();
 
-	
+	//wait for a while. 50 ms
+	/*while(1000*(clock() - now)/CLOCKS_PER_SEC < 15)
+	{
+	}*/
+		
 	
 }
 
@@ -124,7 +132,7 @@ void rewriteTexData()
 {
 	glBindTexture(GL_TEXTURE_2D, textureHandler);
 
-	glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,320,240,0,GL_RGBA,GL_UNSIGNED_BYTE,(GLvoid*)capture.mTargetBuf);
+	glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,frame.cols,frame.rows,0,GL_BGR,GL_UNSIGNED_BYTE,frame.ptr());
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // Linear Filtering
@@ -138,7 +146,7 @@ Entry point for shader program production
 ShaderProgram shaderProgram;
 void prepareShaders()
 {
-	shaderProgram = EdgeDetectionShader40();//ShakeShader();
+	shaderProgram = SineShader();//ShakeShader();
 	shaderProgram.prepareProgram();
 }
 
@@ -197,7 +205,7 @@ void openGLDrawScene()
 	timeUniform = glGetUniformLocationARB(shaderProgram.program, "time");
 			    glUniform1fARB(timeUniform, (GLfloat)(a));
 				
-	a += 0.001*diffClock;
+	a += 0.01;//*diffClock;
 
 	glBegin(GL_QUADS);
 		glColor3f(0.0,0.0,0.0);
@@ -220,68 +228,7 @@ void openGLDrawScene()
 }
 
 
-/**
-sets up the camera
-*/
-bool setupCamera()
-{
-	int devices = setupESCAPI();
 
-	if(devices == 0){
-		std::cout << "FATAL ERROR: some problems with devices. No device found\n";
-		std::cin.get();
-		std::exit(1);
-		return false;
-	}
-	/* Set up capture parameters.
-     * ESCAPI will scale the data received from the camera 
-     * (with point sampling) to whatever values you want. 
-     * Typically the native resolution is 320*240.
-     */
-
-    
-    capture.mWidth  = W;
-    capture.mHeight = H;
-    capture.mTargetBuf = new int[W * H];
-
-	/* Initialize capture - only one capture may be active per device,
-   * but several devices may be captured at the same time. 
-   *
-   * 0 is the first device.
-   */
-  
-    if (initCapture(0, &capture) == 0)
-    {
-       std::cout << ("Capture failed - device may already be in use.\n");
-       return false;
-    } 
-
-  doSnapshot();
-
-  return true;
-}
-void shutDownCamera()
-{  
-  deinitCapture(0); 
-}
-
-/*
-Does a snapshot using the camera
-*/ 
-void doSnapshot()
-{  
-  doCapture(0);
-    
-  while (isCaptureDone(0) == 0)
-  {       
-  }
-  
-  for (int i = 0; i < W*H; i++){
-		capture.mTargetBuf[i] = (capture.mTargetBuf[i] & 0xff00ff00) |
-			                    ((capture.mTargetBuf[i] & 0xff) << 16) |
-							    ((capture.mTargetBuf[i] & 0xff0000) >> 16);
-  }
-}
 
 /**
 keyboard utility
@@ -314,7 +261,7 @@ void onKeyboard(unsigned char key, int x, int y)
 		//----------------------------------
 		case 'd':
 			if(ratio == 1)
-				ratio = 2;
+				ratio = 1.5;
 			else
 				ratio = 1;
 		break;
