@@ -76,6 +76,7 @@
     <ClCompile Include="src\textfile\textfile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="configOpenCV.props" />
     <None Include="libs\opencv\build\x86\vc10\bin\opencv_highgui240.dll" />
     <None Include="README" />
     <None Include="src\artwork.png" />
@@ -100,6 +101,8 @@
     <None Include="src\shaders\SineShader\SineShader.vert" />
     <None Include="src\shaders\testIPShader\testFragmentShader.frag" />
     <None Include="src\shaders\testIPShader\testVertexShader.vert" />
+    <None Include="src\shaders\TestVertexShader\TestVertexShader.frag" />
+    <None Include="src\shaders\TestVertexShader\TestVertexShader.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libs\opencv\include\opencv\cv.h" />
