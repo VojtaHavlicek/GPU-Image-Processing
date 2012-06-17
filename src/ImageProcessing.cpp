@@ -14,8 +14,9 @@
 // All rights reserved.
 // 
 //---------------------------------------------------------------------
-#include <cv.h>
-#include <highgui.h>
+#include <fdlib.h>                // face detection library
+#include <cv.h>                   // cv lib
+#include <highgui.h>			  // highgui 
 #include <GL/glew.h>              // header file of GLEW;
 #include <GL/glut.h>              // header file of GLUT functions
 #include <iostream>               // input/output stream for debug
