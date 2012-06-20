@@ -147,7 +147,7 @@ Entry point for shader program production
 ShaderProgram shaderProgram;
 void prepareShaders()
 {
-	shaderProgram = SineShader();//EdgeDetectionShader();//SineShader();//ShakeShader();
+	shaderProgram = BarellShader();//SineShader();//EdgeDetectionShader();//SineShader();//ShakeShader();
 	shaderProgram.prepareProgram();
 }
 
@@ -261,11 +261,18 @@ void onKeyboard(unsigned char key, int x, int y)
         break;
 		//----------------------------------
 		case 'd':
-			if(ratio == 1)
+			if(ratio != 1.5)
 				ratio = 1.5;
 			else
 				ratio = 1;
 		break;
+		case 'b':
+			if(ratio != 10)
+				ratio = 10;
+			else
+				ratio = 1;
+		break;
+
     }
 }
 

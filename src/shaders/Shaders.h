@@ -10,3 +10,4 @@ Header used only for inserting the shaders
 #include "testIPShader\TestIPShader.h"
 #include "EdgeDetectionShader40\EdgeDetectionShader40.h"
 #include "SineShader\SineShader.h"
+#include "BarellShader\BarellShader.h"
