@@ -235,6 +235,12 @@ void openGLDrawScene()
 keyboard utility
 */
 
+GLint barrelSwitcherLoc;
+int barrel = 1;
+GLint convolutionSwitcherLoc;
+int convolution = 1;
+
+
 void onKeyboard(unsigned char key, int x, int y)
 {	
 	key=(key>'A' && key<='Z') ? key+'a'-'A':key; 
@@ -273,6 +279,51 @@ void onKeyboard(unsigned char key, int x, int y)
 				ratio = 1;
 		break;
 
+
+ case 'o':
+   shaderProgram = EdgeDetectionShader();
+   shaderProgram.prepareProgram();
+   shaderProgram.run();
+  break;
+  case 'p':
+   shaderProgram = BarellShader();
+   shaderProgram.prepareProgram();
+   shaderProgram.run();
+  break;
+  case 'k':
+   if(barrel == 1){
+    barrel = 2;
+    barrelSwitcherLoc = glGetUniformLocationARB(shaderProgram.program, "switcher");
+       glUniform1iARB(barrelSwitcherLoc, (int)(barrel));
+   }
+   else{
+    barrel = 1;
+    barrelSwitcherLoc = glGetUniformLocationARB(shaderProgram.program, "switcher");
+       glUniform1iARB(barrelSwitcherLoc, (int)(barrel));
+   }
+  break;
+  case 'j':
+   if(convolution == 1){
+    convolution = 2;
+    convolutionSwitcherLoc = glGetUniformLocationARB(shaderProgram.program, "switcher");
+       glUniform1iARB(convolutionSwitcherLoc, (int)(convolution));
+   }
+   else if(convolution == 2){
+    convolution = 3;
+    convolutionSwitcherLoc = glGetUniformLocationARB(shaderProgram.program, "switcher");
+       glUniform1iARB(convolutionSwitcherLoc, (int)(convolution));
+   }
+   else if(convolution == 3){
+    convolution = 4;
+		convolutionSwitcherLoc = glGetUniformLocationARB(shaderProgram.program, "switcher");
+       glUniform1iARB(barrelSwitcherLoc, (int)(convolution));
+   }
+   else if(convolution == 4){
+    convolution = 1;
+		convolutionSwitcherLoc = glGetUniformLocationARB(shaderProgram.program, "switcher");
+       glUniform1iARB(convolutionSwitcherLoc, (int)(convolution));
+   }
+  break;
     }
 }
 
