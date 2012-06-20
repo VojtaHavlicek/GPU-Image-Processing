@@ -63,6 +63,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\escapi\escapi.cpp" />
+    <ClCompile Include="src\shaders\BarellShader\BarellShader.cpp" />
     <ClCompile Include="src\shaders\EdgeDetectionShader40\EdgeDetectionShader40.cpp" />
     <ClCompile Include="src\shaders\SimpleMotionBlur\SimpleMotionBlur.cpp" />
     <ClCompile Include="src\shaders\EdgeDetectionShader20\EdgeDetectionShader20.cpp" />
@@ -85,6 +86,8 @@
     <None Include="src\openCV\cv210d.dll" />
     <None Include="src\openCV\cxcore210d.dll" />
     <None Include="src\openCV\highgui210d.dll" />
+    <None Include="src\shaders\BarellShader\BarellShader.frag" />
+    <None Include="src\shaders\BarellShader\BarellShader.vert" />
     <None Include="src\shaders\gaussianBlurTest\GaussianShader.frag" />
     <None Include="src\shaders\gaussianBlurTest\GaussianShader.vert" />
     <None Include="src\shaders\SimpleMotionBlur\SimpleMotionBlur.frag" />
@@ -117,6 +120,7 @@
     <ClInclude Include="libs\opencv\include\opencv\highgui.h" />
     <ClInclude Include="libs\opencv\include\opencv\ml.h" />
     <ClInclude Include="src\escapi\escapi.h" />
+    <ClInclude Include="src\shaders\BarellShader\BarellShader.h" />
     <ClInclude Include="src\shaders\EdgeDetectionShader40\EdgeDetectionShader40.h" />
     <ClInclude Include="src\shaders\gaussianblurtest\gaussianshader.h" />
     <ClInclude Include="src\shaders\SimpleMotionBlur\SimpleMotionBlur.h" />
