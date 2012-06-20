@@ -14,7 +14,7 @@
 // All rights reserved.
 // 
 //---------------------------------------------------------------------
-#include <fdlib.h>                // face detection library
+//#include <fdlib.h>                // face detection library
 #include <cv.h>                   // cv lib
 #include <highgui.h>			  // highgui 
 #include <GL/glew.h>              // header file of GLEW;
@@ -35,7 +35,7 @@ Main entry point
 */
 int main(int argc, char **argv)
 {
-	std::cout << "Image Processing Using GPU \n\nCreated by Vojtech Havlicek & Daniel Greening (2012)\nSupervised by Lionel Fachkamps\nImperial College\n---\nOutput:\n";
+	std::cout << "Image Processing Using GPU \n\nCreated by Vojtech Havlicek & Daniel Greening (2012)\nSupervised by Lionel Fafchamps\nImperial College\n---\nOutput:\n";
 	
 	/**
 	Prepares GLUT
@@ -147,7 +147,7 @@ Entry point for shader program production
 ShaderProgram shaderProgram;
 void prepareShaders()
 {
-	shaderProgram = SineShader();//ShakeShader();
+	shaderProgram = SineShader();//EdgeDetectionShader();//SineShader();//ShakeShader();
 	shaderProgram.prepareProgram();
 }
 
